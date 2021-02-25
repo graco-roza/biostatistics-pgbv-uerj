@@ -323,7 +323,7 @@ Conclusion: There are no objects in the Environment.
 
 ##  Source Editor
 
-Generally we will want to write codes that are longer than a couple of lines. We want this (yes, ***you want it too!***) because we believe we will repeat the same steps many many times (**rountinely**) that would be boring to write it all over again always when we need it .
+Generally we will want to write codes that are longer than a couple of lines. We want this (yes, ***you want it too!***) because we believe we will repeat the same steps many many times (**routinely**) that would be boring to write it all over again always when we need it .
 
 These files are commonly called scripts and they work like a recipe of a cake. We need to include all the ingredients in the right order in order to get a [tastemade](https://www.tastemade.com.br/)-like cake.
 
@@ -419,4 +419,4 @@ Make notes on your doubts and let's check together tomorrow.
 class: inverse, center, middle
 
 #<img src="https://media3.giphy.com/media/l4pTjOu0NsrLApt0Q/200.webp?cid=ecf05e47x8rghx27ay8y9cyxqe0scgcxtfkj967zwedqobwo&rid=200.webp", width="200%">
---- 
+

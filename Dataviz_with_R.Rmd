@@ -1,0 +1,806 @@
+---
+title: '<b>DataViz with R</b><br><br>'
+subtitle: '<i>Tidying, transforming and vizualizing data.</i><br><br>'
+author: "Caio Graco-Roza<br>Marcelo Manzi Marinho"
+output:
+  xaringan::moon_reader:
+    css: ["xaringan-themer.css"]
+    nature:
+      highlightLines: true
+      countIncrementalSlides: true
+      
+---
+```{r theme settings, include=FALSE}
+library(tidyverse)
+library(xaringan)
+library(xaringanExtra)
+library(xaringanthemer)
+library(xaringanBuilder)
+library(patchwork)
+
+xaringanExtra::use_tachyons()
+xaringanExtra::use_fit_screen()
+
+style_mono_accent(base_color = "#967bb6",
+                  code_inline_color="#006600",
+                  code_highlight_color = "rgba(220, 187, 219,1)",
+                    header_font_google = google_font("Bitter"),
+  text_font_google   = google_font("Lato", "400", "400i"),
+  code_font_google   = google_font("Hack"))
+
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+class: inverse, center, middle
+
+#Frustration is natural when you start programming in R!
+--
+<img src="https://media3.giphy.com/media/dTWMMFwgtmc1Gcghm2/200w.webp?cid=ecf05e479vyi7liq7d3001ih6zmwge3f0ifgyjz0hr8v5069&rid=200w.webp", width="70%">
+
+---
+
+#Persistance is the key
+
+## Let's review some basics
+
+Remember that R is a very efficient calculator
+.pull-left[
+```{r coding basics, eval=FALSE}
+1 / 200 * 30
+# > [1] 0.15
+(59 + 73 + 2) / 3
+# > [1] 44.66667
+sin(pi / 2)
+# > [1] 1
+```
+We often use `<-` to give *names* to values and call them `objects`.
+
+```{r}
+x <- 3 * 4
+```
+]
+.pull-right[
+<img src="https://media2.giphy.com/media/APqEbxBsVlkWSuFpth/giphy.webp?cid=ecf05e47v4uldhewzt26r4u4crrgeh0x79jrs1dwp7sbj7gx&rid=giphy.webp", width="80%">]
+
+---
+class: center, top
+#Visualisation is important, but tidying is paramount.
+--
+
+<img src="https://media4.giphy.com/media/KE9cblgPK6EPS/200w.webp?cid=ecf05e47w3qvr0c299vlu8hi8xjjqgl1syn3t7e16iebei6y&rid=200w.webp", width="70%">
+
+---
+
+#Working on transformation
+
+.pull-left[
+<img src="https://media0.giphy.com/media/TJHcpldoI0zAY/200.webp?cid=ecf05e477orlaj6p24o3kstwyon542jdipxps4flufcxur7i&rid=200.webp", width="100%", style='border: 10'>
+]
+
+--
+
+.pull-right[
+
+First we load the packages `nycfligthts13` and `tydyverse`. 
+
+**Remember how?**
+]
+
+--
+
+.bg-lightpurple.b--black.ba.bw2.br3.shadow-5.ph4.mt5[
+
+```{r setup, message = FALSE, style="huge"}
+library(nycflights13)
+library(tidyverse)
+```
+]
+---
+#NYCFLIGHTS13*
+
+The data frame contains all `r format(nrow(nycflights13::flights), big.mark = ",")` flights that departed from New York City in 2013.
+
+```{r, echo=FALSE}
+# save the built-in output hook
+hook_output <- knitr::knit_hooks$get("output")
+
+# set a new output hook to truncate text output
+knitr::knit_hooks$set(output = function(x, options) {
+  if (!is.null(n <- options$out.lines)) {
+    x <- xfun::split_lines(x)
+    if (length(x) > n) {
+      # truncate the output
+      x <- c(head(x, n), "....\n")
+    }
+    x <- paste(x, collapse = "\n")
+  }
+  hook_output(x, options)
+})
+options(width=70) #Just some aesthetics option. You may ignore it
+```
+
+```{r flights, echo=TRUE, out.lines= 13}
+
+flights
+```
+
+.footnote[[*] Section 5.2. of  <span style='color:yellow'>`R for Data Science`</span>]
+
+---
+
+#First things first
+
+There are many variables classes, but for now let's focus on the most usual for the attendants of this course.
+
+You may have noted the number under the column names. These describe the variable type:
+
+.bg-transparent.b--.ba.bw2.br3.shadow-5.ph4.mt5[
+- `int` stands for integers.
+- `dbl` stands for double.
+- `chr` stands for characters vectors or strings.
+
+.tr[
+— R for Data Science
+]
+]
+---
+
+#Manipulating your data
+
+`filter()` allows you to subset observations based on their values.
+
+For example, if we want to check only the flights that departed in December.
+
+```{r filter first time, out.lines=10}
+
+filter(flights, month == 12)
+
+```
+
+
+
+**<snap style='font-size: 150%'>Now how can we check only the flights that departed in July?</snap>**
+
+---
+https://d33wubrfki0l68.cloudfront.net/01f4b6d39d2be8269740a3ad7946faa79f7243cf/8369a/diagrams/transform-logical.png
+#Comparisons
+
+To use filtering effectively, you have to know how to select the observations that you want using the comparison operators. R provides the standard suite: `>`, `>=`, `<`, `<=`, `!=` (not equal), and `==` (equal).
+
+###Here's a tip:
+.bg-washed-grey.b--.ba.bw2.br3.shadow-5.ph4.mt5[
+Multiple arguments to `filter()` are combined with “and”: every expression must be true in order for a row to be included in the output. For other types of combinations, you’ll need to use *Boolean operators*:  
+<br>
+- `&` for “and”;  
+- `|` for “or”;  
+- `!` for “not”.
+]
+
+---
+
+#What are Boolean operators?
+
+.pull-left[The figure below describes a complete set of boolean operations. **x** is the left-hand circle, **y** is the right-hand circle, and the shaded region show which parts each operator selects.]
+.pull-right[
+```{r, eval=FALSE, size="tiny"}
+filter(flights, month == 11|month == 12)
+filter(flights, month == (11|12)) #why not?
+filter(flights, !(arr_delay > 120 | dep_delay > 120))
+filter(flights, arr_delay <= 120, dep_delay <= 120)
+
+
+```
+
+]
+<img src="https://d33wubrfki0l68.cloudfront.net/01f4b6d39d2be8269740a3ad7946faa79f7243cf/8369a/diagrams/transform-logical.png", width="70%">
+.pull-right[Figure <span style='color:yellow'>`5.1`</span> in <span style='color:yellow'>`R for Data Science`</red>]
+
+
+---
+class:left,top
+#Missing values
+
+When working on experiments or even collecting data. We often have missing information from e.g., when the equipment decides to not work during field work, or the day you get sick and cannot go to the lab to follow your thesis daily experiment. 
+
+This will lead to empty cells in your excel table that you may or may not want to consider when running you analysis. In R, these empty spaces are known as NA s ("not available").
+
+.bg-transparent.b--.ba.bw2.br3.shadow-5.ph4.mt5[
+
+
+<span style='color:red; font-size: 120%'> **Boring alert!!** </span>  
+
+Almost any operation involving an unknown value will also be unknown
+
+]
+---
+class:left,top
+#Missing values
+.pull-left[
+```{r}
+NA > 5
+
+10 == NA
+```
+]
+
+.pull-right[
+
+```{r}
+NA / 2
+
+NA == NA
+
+```
+]
+
+Maybe it is easier if we translate this into human language?
+
+```{r}
+# Let x be my age. You don't know how old I am.
+x <- NA
+# Let y be Marcelo's age. We don't know how old he is.
+y <- NA
+# Are John and Mary the same age?
+x == y
+```
+
+---
+
+#Exercises
+
+Find all flights that
+- Had an arrival delay of two or more hours
+- Flew to Houston (IAH or HOU)
+- Were operated by United, American, or Delta
+- Departed in winter (July, August, and September)
+- Arrived more than two hours late, but didn’t leave late
+- Were delayed by at least an hour, but made up over 30 minutes in flight
+- Departed between midnight and 6am (inclusive)
+- Another useful `dplyr` filtering helper is `between()`. What does it do? Can you use it to simplify the code needed to answer the previous challenges?
+- How many flights have a missing `dep_time`? What other variables are missing? What might these rows represent?
+- Why is `NA ^ 0` not missing? Why is `NA | TRUE` not missing? Why is `FALSE & NA` not missing? Can you figure out the general rule? (`NA * 0` is a tricky counterexample!).
+
+.footnote[Exercises from ***R for Data Science***]
+---
+
+# Arranging lines 
+
+`arrange()` works similarly to `filter()` except that instead of selecting rows, it changes their order.
+
+```{r}
+arrange(flights, year, month, day)
+```
+
+---
+
+# Arranging lines
+
+```{r}
+arrange(flights, desc(dep_delay))
+```
+
+In case of `NA`s, these will always go in the end of the data.
+
+---
+
+# Selecting columns
+
+`select()` is very useful if your data has many columns.
+
+```{r}
+select(flights, year, month, day)
+```
+
+---
+
+#Adding new variables.
+
+There are many ways to create new variables. Here we will focus on using the `mutate()` function from `dplyr`.
+
+```{r, out.lines=6}
+#First, we select columns and store them in the `flights_sml` object
+flights_sml <- select(flights, 
+  year:day, ends_with("delay"), 
+  distance, air_time)
+#Then we use the new object and create new variables from the existent ones.
+mutate(flights_sml,
+  gain = dep_delay - arr_delay,
+  speed = distance / air_time * 60
+)
+```
+
+---
+
+#Grouping variables  
+
+`summarise()` collapses a data frame into a single row
+
+```{r}
+summarise(flights, delay = mean(dep_delay, na.rm = TRUE))
+
+```
+
+`summarise()` is also very useful for taking group means and standard deviations
+
+```{r, out.lines=7, warning=FALSE, message=FALSE}
+by_day <- group_by(flights, year, month, day)
+summarise(by_day, delay = mean(dep_delay, na.rm = TRUE))
+```
+
+---
+
+#Combine everything
+
+```{r message=FALSE, warning=FALSE}
+by_dest <- group_by(flights, dest)
+delay <- summarise(by_dest,
+  count = n(), # n() counts the number of lines for each group.
+  dist = mean(distance, na.rm = TRUE),
+  delay = mean(arr_delay, na.rm = TRUE)
+)
+filter(delay, count > 20, dest != "HNL")
+```
+
+---
+
+#Connecting actions
+
+This code is a little frustrating to write because we have to give each intermediate data frame a name, even though we don’t care about it. We can make it better by using pipes `%>%`
+
+.pull-left[
+```{r, eval=TRUE}
+delay <- flights %>% #<<
+  group_by(dest) %>% #<<
+  summarise(
+    count = n(),
+    dist = mean(distance, na.rm = TRUE),
+    delay = mean(arr_delay, na.rm = TRUE)
+  ) %>% #<<
+filter(count > 20, dest != "HNL")
+```
+]
+--
+.pull-right[
+```{r echo=FALSE, fig.align="center", fig.height=4, fig.width=6, message=FALSE, warning=FALSE}
+ggplot(data = delay, mapping = aes(x = dist, y = delay)) +
+  geom_point(aes(size = count), alpha = 1/3) +
+  geom_smooth(se = FALSE)+
+  theme_xaringan()+
+  scale_xaringan_fill_continuous()
+```
+.center[<img src="https://media4.giphy.com/media/kFONSfnHQSEX2NOrh7/giphy.gif", width="70%">]
+]
+
+
+
+---
+class: inverse, left, top
+
+# Why Data visualization?
+
+Now that we know how to transform our data. Let's check the `Ascomber's quartet dataset` from the package `datasets`.
+
+```{r include=FALSE}
+anscombe<-tibble(datasets::anscombe)
+```
+
+```{r}
+anscombe
+```
+---
+class: inverse
+# Why Data visualization?
+
+We see that the for any `x`variable there is a `y`. Now let's check the mean and standard deviations of the variables using  `summarise()`.
+
+
+
+```{r}
+anscombe %>% summarise_all(mean) # take the mean of all columns
+anscombe %>% summarise_all(sd) # take the sd of all columns
+```
+.pull-left[That is very impressive! All `x` and `y` have similar `mean` and `standard deviation`. This probably means that they are somehow similar right.] 
+.pull-right[]
+
+---
+class: inverse
+## Why Data visualization?
+
+```{r echo=FALSE, fig.align='center', fig.height=10, fig.width=20, message=FALSE, warning=FALSE}
+
+anscombe %>% select(starts_with("x")) %>%
+  pivot_longer(cols=everything(),values_to = "x", names_to = "Group")  %>% add_column( anscombe %>% 
+      select(starts_with("y")) %>%
+  pivot_longer(cols=everything(),
+               values_to = "y",
+               names_to = NULL) %>%
+    select(y)) %>%
+  ggplot(aes(x=x,y=y)) + ggtitle("Anscombe data") +
+  geom_point(size=7) +
+  geom_smooth(method = "lm")+
+  facet_wrap(~Group)+
+  theme_xaringan()
+```
+
+---
+class: center, middle
+
+ <span style='color:#004d1a'>"There are no routine statistical questions, only questionable statistical routines."</span> 
+.right[*Sir David Cox*]
+
+--
+<br>
+<br>
+
+ <span style='color:#004d1a'>“Far better an approximate answer to the right question, which is often vague, than an exact answer to the wrong question, which can always be made precise.” </span>
+.right[*John Tukey*]
+
+---
+
+#Exploratory data analysis - EDA
+
+
+There is no rule about which questions you should ask to guide your research. However, two types of questions will always be useful for making discoveries within your data. You can loosely word these questions as:
+
+.bg-transparent.b--.ba.bw2.br3.shadow-5.ph4.mt5[
+- What type of variation occurs within the variables?
+
++ What type of covariation occurs between the variables?
+]
+
+---
+
+#What do we have to know before starting
+
+A **variable** is a quantity, quality, or property that you can measure.
+
+A **value** is the state of a variable when you measure it. The value of a variable may change from measurement to measurement.
+
+An **observation** is a set of measurements made under similar conditions (you usually make all of the measurements in an observation at the same time and on the same object). An observation will contain several values, each associated with a different variable. I’ll sometimes refer to an observation as a data point.
+
+**Tabular** data is a set of values, each associated with a variable and an observation. Tabular data is tidy if each value is placed in its own “cell”, each variable in its own column, and each observation in its own row.
+
+---
+
+#Variation
+
+The tendency of the values of a variable to change from measurement to measurement
+
+
+The best way to understand variation is to visualise the distribution of the variable’s values. Here we will look at the `diamonds` data from `ggplot2` 
+
+.pull-left[
+
+```{r echo=FALSE, fig.width=10, fig.height=5}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut))+
+  ggtitle("For categorical variables")+
+  theme_xaringan()
+```
+
+]
+
+.pull-right[
+```{r echo=FALSE, fig.width=10, fig.height=5}
+ggplot(data = diamonds) +
+  geom_histogram(mapping = aes(x = carat), binwidth = 0.5)+
+  ggtitle("For continuous variables")+
+  theme_xaringan()
+
+```
+]
+
+---
+
+#Variation
+
+##Typical values
+
+*In both bar charts and histograms, tall bars show the common values of a variable, and shorter bars show less-common values.*
+
+```{r echo=FALSE, fig.align='center', fig.height= 5, fig.width=10}
+diamonds %>%
+  filter(carat <=3) %>%
+  ggplot(mapping = aes(x = carat)) +
+  geom_histogram(binwidth = 0.01) +
+  theme_xaringan()
+```
+
+
+---
+
+#Clumps
+
+Cluster of similar values may appear in our data. It can be insightful to give it a thought.
+
+```{r, echo=FALSE, fig.align='center', fig.height= 5, fig.width=10}
+  ggplot(data = faithful, mapping = aes(x = eruptions)) + 
+  geom_histogram(binwidth = 0.25) +
+  theme_xaringan()
+```
+
+Here we see the length (in minutes) of 272 eruptions of the Old Faithful Geyser in Yellowstone National Park. 
+
+---
+
+#Unusual values
+
+*Outliers are observations that are unusual; data points that don’t seem to fit the pattern. Sometimes outliers are data entry errors; other times outliers suggest important new science.*
+
+They are hard to spot in some cases... let's check our precious `diamonds` again. The `y` value represents one of the diamonds dimension.
+
+.pull-left[
+```{r, echo=FALSE, fig.width=7, fig.height=7}
+ggplot(diamonds) + 
+  geom_histogram(mapping = aes(x = y), binwidth = 0.5)+
+  ggtitle("All values")+
+  theme_xaringan()
+```
+]
+
+--
+
+.pull-right[
+
+```{r, echo=FALSE, fig.width=7, fig.height=7}
+ggplot(diamonds) + 
+  geom_histogram(mapping = aes(x = y), binwidth = 0.5)+
+  ggtitle("Zoom-in the unnual values")+
+   coord_cartesian(ylim = c(0, 10))+
+  theme_xaringan()
+```
+]
+
+---
+#Dealing with unusual values
+
+It is advisable to always look for the unnusual values in your data.
+
+.pull-left[
+```{r}
+unusual <- diamonds %>%  
+  filter(y < 3 | y > 20) %>% #<<
+  select(price, x, y, z) %>%
+  arrange(y)
+unusual # let's check the outliers
+```
+]
+--
+
+.pull-right[Probably these are incorrect as we cannot have `size = 0`, also some very big diamonds quite cheap.
+<br>
+<br>
+
+<img src="https://media4.giphy.com/media/OqAeQrGmU7lS6tENnQ/200w.webp?cid=ecf05e47pgch0l3kvuj1asp0z6g65a3g8zrosz11mvxdg0na&rid=200w.webp", width="100%">
+]
+---
+
+#Dealing with unusual values
+
+If you’ve encountered unusual values in your dataset, and simply want to move on to the rest of your analysis, you have two options.
+
+ - Drop the entire row with the strange values.  
+ **You should be able do it alone at this stage**
+ 
+- Replace the unusual values with missing values (or NA).
+
+```{r}
+diamonds2 <- diamonds %>% 
+  mutate(y = ifelse(y < 3 | y > 20, NA, y))
+```
+
+---
+
+#Missing values
+
+Sometimes missing values can be somehow informative. In the `flights` datas, `dep_time` indicates cancelled flights, for example.
+
+```{r, eval=FALSE}
+flights %>%
+  mutate(
+    cancelled = is.na(dep_time), #<<
+    sched_hour = sched_dep_time %/% 100,
+    sched_min = sched_dep_time %% 100,
+    sched_dep_time = sched_hour + sched_min / 60
+  )
+```
+
+
+```{r, echo=FALSE, fig.width=10, fig.height=3, fig.align='center'}
+nycflights13::flights %>%
+  mutate(
+    cancelled = is.na(dep_time),
+    sched_hour = sched_dep_time %/% 100,
+    sched_min = sched_dep_time %% 100,
+    sched_dep_time = sched_hour + sched_min / 60
+  ) %>%
+  ggplot(mapping = aes(sched_dep_time)) +
+  geom_freqpoly(mapping = aes(colour = cancelled),
+                binwidth = 1 / 4, size=1)+
+    theme_xaringan(background_color = "#FFFFFF")+
+  scale_colour_manual(values=c("#967bb6","#006600"))
+```
+
+
+---
+
+#Covariation
+
+*The tendency for the values of two or more variables to vary together in a related way*
+
+
+.pull-left[
+<p align="justify"> It’s common to want to explore the distribution of a continuous variable broken down by a categorical variable.</p>
+
+```{r Overlayed lines, echo=FALSE, fig.width=7, fig.height=5}
+ggplot(data = diamonds, mapping = aes(x = price)) + 
+  geom_freqpoly(mapping = aes(colour = cut), binwidth = 500, size=1)+
+  theme_xaringan()+
+  theme(legend.position = "bottom")+
+  guides(colour=guide_legend(nrow=2, byrow=TRUE))
+```
+]
+--
+.pull-right[
+ Instead of counts, we can display density.
+ 
+ <br>
+ <br>
+```{r Density lines, echo=FALSE, fig.width=7, fig.height=4.7}
+ggplot(data = diamonds, mapping = aes(x = price, y=..density..)) + 
+  geom_freqpoly(mapping = aes(colour = cut), binwidth = 500, size=1)+
+  theme_xaringan()+
+  theme(legend.position = "none")
+```
+
+]
+
+
+---
+
+#Covariation
+
+A **boxplot** comes handy for a distribution of values across categories.
+
+<img src="https://d33wubrfki0l68.cloudfront.net/153b9af53b33918353fda9b691ded68cd7f62f51/5b616/images/eda-boxplot.png">
+
+---
+
+#Compare values with boxplots
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.width=10, fig.height=7}
+diamonds %>%
+  ggplot(data = diamonds, mapping = aes(x = cut, y = price, colour=cut)) +
+  geom_boxplot()+
+  theme_xaringan()
+
+```
+
+---
+
+#Two categorical variables
+
+.pull-left[
+
+```{r count plot, echo=FALSE, fig.width=7, fig.height=5}
+ggplot(data = diamonds, mapping = aes(x = price)) + 
+  geom_count(mapping = aes(x = cut, y = color))+
+  theme_xaringan()+
+  theme(legend.position = "bottom")+
+  guides(colour=guide_legend(nrow=1, byrow=TRUE))
+```
+]
+
+.pull-right[
+
+```{r raster plot, echo=FALSE, fig.width=7, fig.height=5}
+diamonds %>% 
+  count(color, cut) %>%  
+  ggplot(mapping = aes(x = color, y = cut)) +
+    geom_tile(mapping = aes(fill = n))+
+    theme_xaringan()+
+  scale_xaringan_fill_continuous()+
+  theme(legend.position = "bottom")+
+  guides(colour=guide_legend(nrow=1, byrow=TRUE))
+```
+
+]
+
+---
+
+#Two continuous variables
+.pull-left[
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.width=8, fig.height=5}
+ggplot(data = diamonds) +
+  geom_point(mapping = aes(x = carat, y = price))+
+  theme_xaringan()
+```
+]
+
+.pull-right[
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.width=8, fig.height=5}
+ggplot(data = diamonds) +
+  geom_point(mapping = aes(x = carat, y = price), alpha=1/100)+
+  theme_xaringan()
+```
+]
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=3}
+p1<- ggplot(data = diamonds) +
+  geom_bin2d(mapping = aes(x = carat, y = price), colour="black")+
+  theme_xaringan() + 
+  scale_xaringan_fill_continuous()+
+  theme(legend.position="none")
+
+p2<- ggplot(data = diamonds) +
+  geom_hex(mapping = aes(x = carat, y = price), colour="black")+
+  theme_xaringan() +
+  scale_xaringan_fill_continuous()+
+  theme(legend.position="none")
+
+p1|p2 + plot_layout(guides="collect") & theme(legend.position="none")
+```
+---
+#Is this the end?
+
+Until now, we saw graphics for numeric and categorical variables for univariate and bivariate analysis.
+
+But this is just the beggining. Let's check a bit more of graphics that you may apply to your data.  
+
+--
+We wil be following the ideas from the **Graphic continuum** by [Jon Schwabish](https://twitter.com/jschwabish) and [Severinno Ribecca](http://www.severinoribecca.one/) that has been published in [Data to Viz](https://www.data-to-viz.com/).
+<br>
+
+.center[<img src="https://media1.giphy.com/media/JEfkiZHu8Y0bS/200w.webp?cid=ecf05e47p6pmzuvxtw461hf4o70aktdguqxy78ucvkrgybm1&rid=200w.webp", width='70%'>]
+
+---
+
+<!-- class: title-page, middle, center -->
+
+<!-- #One numeric variable -->
+
+<!-- --- -->
+
+<!-- #Histogram -->
+
+<!-- A histogram takes as input a numeric variable only. The variable is cut into several bins, and the number of observation per bin is represented by the height of the bar. It is possible to represent the distribution of several variable on the same axis using this technique. -->
+
+
+<!-- ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5} -->
+
+<!-- # Load dataset from github -->
+<!-- rooms <- read.table("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/1_OneNum.csv", header=TRUE) -->
+
+<!-- rooms %>% -->
+<!--   filter( price<300 ) %>% -->
+<!--   ggplot( aes(x=price)) + -->
+<!--     stat_bin(breaks=seq(0,300,10), alpha=0.9) + -->
+<!--     ggtitle("Night price distribution of Airbnb appartements") + -->
+<!--   theme_xaringan() + -->
+<!--   scale_xaringan_fill_continuous() -->
+
+
+<!-- ``` -->
+<!-- --- -->
+
+<!-- #Density -->
+
+<!-- A density plot shows the distribution of a `numeric` variable. It takes only `numeric` variables as input and is very close from an `histogram`. It can be use in the same exact condition. -->
+
+<!-- ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5} -->
+
+<!-- # Load dataset from github -->
+<!-- rooms <- read.table("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/1_OneNum.csv", header=TRUE) -->
+
+<!-- rooms %>% -->
+<!--   filter(price<300 ) %>% -->
+<!--   ggplot(aes(x=price)) + -->
+<!--     geom_density(alpha=0.7, bw=10, fill="#967bb6") + -->
+<!--     ggtitle("Night price distribution of Airbnb appartements") + -->
+<!--   theme_xaringan() + -->
+<!--   scale_xaringan_colour_continuous() -->
+
+
+<!-- ``` -->
+
+<!-- --- -->
