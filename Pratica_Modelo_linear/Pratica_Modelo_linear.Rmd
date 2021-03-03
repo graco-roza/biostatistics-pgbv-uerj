@@ -2,7 +2,9 @@
 title: "Modelos Lineares"
 author: "Caio Graco-Roza"
 date: "3/3/2021"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -43,11 +45,11 @@ Numa linguagem mais simples podemos escrever a equação como $Y = intercepto + 
 
 Para estudarmos a nossa regressão linear vamos usar a relação entre tamanho e largura da pétala.
 
-```{r pressure, echo=FALSE}
-iris %>% 
-  ggplot(aes(x=Petal.Width,y=Petal.Length))+
-  geom_point(aes(colour=Species))+
-  geom_smooth(method="lm")
+```{r pressure, echo=FALSE, warning = FALSE, message = FALSE}
+iris %>%
+  ggplot(aes(x = Petal.Width, y = Petal.Length)) +
+  geom_point(aes(colour = Species)) +
+  geom_smooth(method = "lm")
   
 ```
 
@@ -65,19 +67,21 @@ Transformando isso em R
 
 ```{r}
 
-covariancia <- iris %>% summarise(
-  cov = sum((Petal.Length - mean(Petal.Length))*(Petal.Width - mean(Petal.Width))))
+covariancia <- iris %>%
+  summarise(cov = sum((Petal.Length - mean(Petal.Length)) *
+                        (Petal.Width - mean(Petal.Width))))
 
-variancia <- iris %>% summarise(var =sum((Petal.Width- mean(Petal.Width))^2))
+variancia <- iris %>%
+  summarise(var = sum((Petal.Width - mean(Petal.Width)) ^ 2))
 
 inclinação <- covariancia$cov / variancia$var
 
 inclinação
 #Maneira alternativa como diferença média de x e diferença média de y
-diff(range(iris$Petal.Length))/diff(range(iris$Petal.Width))
+diff(range(iris$Petal.Length)) / diff(range(iris$Petal.Width))
 
 #Maneira alternativa de escrita no R. Usando quadrados minimos.
-cov(iris$Petal.Length, iris$Petal.Width)/var(iris$Petal.Width)
+cov(iris$Petal.Length, iris$Petal.Width) / var(iris$Petal.Width)
 
 ```
 
@@ -104,11 +108,13 @@ intercepto
 
 Considerando que a nossa equação da reta é $\hat{y}= 1.08 + 2.22\times x$ nós podemos tentar predizer valores e ver o quanto eles se distanciam da nossa expectativa.
 
-```{r}
+```{r R2}
+#Aplico a minha formula para os valores observados de X
+#e comparo o Y predito com o Y real.
 
-
-#Aplico a minha formula para os valores observados de X e comparo o Y predito com o Y real.
-predito<- sapply(iris$Petal.Width, function(x) intercepto + inclinação*x)
+predito <-
+  sapply(iris$Petal.Width, function(x)
+    intercepto + inclinação * x)
 
 
 ```
@@ -126,30 +132,25 @@ var_y <- sum((iris$Petal.Length - mean(iris$Petal.Length))^2)
 
 R2<-1- SQD_predito/var_y
 
-summary(lm(Petal.Length~Petal.Width, data=iris))
-
 ```
 
-# Erro padrão  {style="caret-color: rgb(255, 255, 255); color: rgb(255, 255, 255); font-family: Helvetica; font-style: normal; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none;"}
-
-\
+# Erro padrão
 
 O erro padrão da regressão, ou erro padrão do parâmetro, representa a distância média entre os valores observados e a curva de regressão. Em outras palavras, o erro padrão simboliza o quão errado o nosso modelo está em unidades da variável resposta.
 
 O erro padrão da curva pode ser calculado como:
 
 $$
-Erro = \frac{\sqrt{\frac{\sum_{i=i}^{n}(y_i-\hat{y})^2}{n-2}}}{\sqrt{\sum_{i=1}^{n}(x_i - \overline{x})^2}}
+Erro Padrão = \frac{\sqrt{\frac{\sum_{i=i}^{n}(y_i-\hat{y})^2}{n-2}}}{\sqrt{\sum_{i=1}^{n}(x_i - \overline{x})^2}}
 $$
 
-```{r}
-Erro.inc <- sqrt(
-  sum(
-    (iris$Petal.Length - predito)^2
-    )/ (150-2) ) / sqrt(sum((iris$Petal.Width - mean(iris$Petal.Width))^2))
+```{r erro pad}
+Erro.inc <-
+  sqrt(sum((iris$Petal.Length - predito) ^ 2) / (150 - 2)) /
+  sqrt(sum((iris$Petal.Width - mean(iris$Petal.Width)) ^ 2))
 
-Erro.int <- sqrt(1/150) + mean(iris$Petal.Width)^2 / 
-  sum((iris$Petal.Width - mean(iris$Petal.Width))^2)
+Erro.int <- sqrt(1 / 150) + mean(iris$Petal.Width) ^ 2 /
+  sum((iris$Petal.Width - mean(iris$Petal.Width)) ^ 2)
 ```
 
 # 
@@ -157,8 +158,27 @@ Erro.int <- sqrt(1/150) + mean(iris$Petal.Width)^2 /
 # Comparando resultados
 
 ```{r}
-
-data.frame(Intercepto=intercepto,Inclinação =inclinação, R2 = R2) %>%  kbl(caption = "Resultados da Regressão linear", digits=16) %>%
+#Nosso modelo
+tribble(
+  ~ "Parâmetro",
+  ~ "Estimado",
+  ~ "Erro Padrão",
+  ~ "Estatística t",
+  ~ "R²",
+  "Intercepto",
+  intercepto,
+  Erro.int,
+  intercepto / Erro.int,
+  R2,
+  "Inclinação",
+  inclinação,
+  Erro.inc,
+  inclinação / Erro.inc,
+  NA
+) %>%  kbl(caption = "Resultados da Regressão linear", digits =
+             16) %>%
   kable_classic(full_width = F, html_font = "Cambria")
+
+summary(lm(Petal.Length ~ Petal.Width, data = iris))
 
 ```
