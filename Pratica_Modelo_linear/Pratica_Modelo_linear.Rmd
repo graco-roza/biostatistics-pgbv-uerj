@@ -1,0 +1,164 @@
+---
+title: "Modelos Lineares"
+author: "Caio Graco-Roza"
+date: "3/3/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, tidy=TRUE)
+library(tidyverse)
+library(kableExtra)
+library(vegan)
+library(GGally) #Visualização de dados.
+theme_set(theme_linedraw())
+
+```
+
+Vamos usar a base de dados `iris`. A base de dados contem o medições em centímetro de comprimento e largura da pétala e sépala de 50 flores de 3 espécies de Íris.
+
+```{r BCI}
+data(iris)
+
+summary(iris)
+```
+
+Vamos dar uma olhada nos dados com o nosso método favorito. **Gráficos**
+
+```{r message=FALSE, warning=FALSE, fig.width=8, fig.height=7}
+ggpairs(iris, aes(colour = Species, alpha = 0.4))
+```
+
+# Modelo linear simples
+
+O modelo linear simples pode ser descrito através da equação:
+
+$$
+Y = \beta_0 + \beta_1X
+$$
+
+Essa equação pode ser lida como "pegue o valor da variável $X$, multiplique por $\beta_1$ e some esse valor a $\beta_0$ o resultado é o valor da variável $Y$.
+
+Numa linguagem mais simples podemos escrever a equação como $Y = intercepto + inclinação\times observação$.
+
+Para estudarmos a nossa regressão linear vamos usar a relação entre tamanho e largura da pétala.
+
+```{r pressure, echo=FALSE}
+iris %>% 
+  ggplot(aes(x=Petal.Width,y=Petal.Length))+
+  geom_point(aes(colour=Species))+
+  geom_smooth(method="lm")
+  
+```
+
+Modelos lineares são estimados baseados no método dos *minimos quadrados ordinarios*. Esse método é reconhecido por *minimizar a soma dos quadrados dos resíduos* (SQR). O método pode ser dividido em dois processos, o de estimar a inclinação da curva ($\beta_1$) e o de estimar o intercept ($\beta_0$).
+
+# Como estimar a inclinação da curva?
+
+A inclinação da curva é simplesmente a covariância entre as variável resposta ($Y$) e a variável dependente ($X$) dividido pela variancia ($s^2$) de $X$.
+
+$$
+inclinação = \frac{\sum_{i=1}^{n}(x_i-\overline{x})(y_i-\overline{y}))}{\sum_{i=1}^{n}(x_i-\overline{x})^2}
+$$
+
+Transformando isso em R
+
+```{r}
+
+covariancia <- iris %>% summarise(
+  cov = sum((Petal.Length - mean(Petal.Length))*(Petal.Width - mean(Petal.Width))))
+
+variancia <- iris %>% summarise(var =sum((Petal.Width- mean(Petal.Width))^2))
+
+inclinação <- covariancia$cov / variancia$var
+
+inclinação
+#Maneira alternativa como diferença média de x e diferença média de y
+diff(range(iris$Petal.Length))/diff(range(iris$Petal.Width))
+
+#Maneira alternativa de escrita no R. Usando quadrados minimos.
+cov(iris$Petal.Length, iris$Petal.Width)/var(iris$Petal.Width)
+
+```
+
+# Como estimar o intercepto?
+
+O intercepto é um parâmetro mais simples de enteder do que a inclinação. Ele é baseado na inclinação e nos valores médios da variável independente ($Y$) e dependente ($X$). Podemos descreve-lo como
+
+$$
+Intercepto = \overline{y} - \beta_{1} \times \overline{x}
+$$
+
+O intercepto representa o nosso valor observado na ausência de efeito da variável $X$.
+
+```{r}
+
+intercepto <- mean(iris$Petal.Length) -
+  (cov(iris$Petal.Length,iris$Petal.Width)/var(iris$Petal.Width)) *
+  mean(iris$Petal.Width)
+
+intercepto
+```
+
+# R²
+
+Considerando que a nossa equação da reta é $\hat{y}= 1.08 + 2.22\times x$ nós podemos tentar predizer valores e ver o quanto eles se distanciam da nossa expectativa.
+
+```{r}
+
+
+#Aplico a minha formula para os valores observados de X e comparo o Y predito com o Y real.
+predito<- sapply(iris$Petal.Width, function(x) intercepto + inclinação*x)
+
+
+```
+
+Assim o nosso R² pode ser descrito como a soma dos quadrados das diferenças entre o observado e o predito sobre a variância de $y$ .
+
+$$
+R^2 = 1- \frac{\sum_{i=1}^{n}(y_i-\hat{y})^2}{\sum_{i=1}^{n}(y_i - \overline{y})^2}
+$$
+
+```{r}
+
+SQD_predito <- sum((iris$Petal.Length - predito)^2)
+var_y <- sum((iris$Petal.Length - mean(iris$Petal.Length))^2)
+
+R2<-1- SQD_predito/var_y
+
+summary(lm(Petal.Length~Petal.Width, data=iris))
+
+```
+
+# Erro padrão  {style="caret-color: rgb(255, 255, 255); color: rgb(255, 255, 255); font-family: Helvetica; font-style: normal; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none;"}
+
+\
+
+O erro padrão da regressão, ou erro padrão do parâmetro, representa a distância média entre os valores observados e a curva de regressão. Em outras palavras, o erro padrão simboliza o quão errado o nosso modelo está em unidades da variável resposta.
+
+O erro padrão da curva pode ser calculado como:
+
+$$
+Erro = \frac{\sqrt{\frac{\sum_{i=i}^{n}(y_i-\hat{y})^2}{n-2}}}{\sqrt{\sum_{i=1}^{n}(x_i - \overline{x})^2}}
+$$
+
+```{r}
+Erro.inc <- sqrt(
+  sum(
+    (iris$Petal.Length - predito)^2
+    )/ (150-2) ) / sqrt(sum((iris$Petal.Width - mean(iris$Petal.Width))^2))
+
+Erro.int <- sqrt(1/150) + mean(iris$Petal.Width)^2 / 
+  sum((iris$Petal.Width - mean(iris$Petal.Width))^2)
+```
+
+# 
+
+# Comparando resultados
+
+```{r}
+
+data.frame(Intercepto=intercepto,Inclinação =inclinação, R2 = R2) %>%  kbl(caption = "Resultados da Regressão linear", digits=16) %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+```
