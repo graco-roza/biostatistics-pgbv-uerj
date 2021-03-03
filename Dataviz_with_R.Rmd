@@ -754,53 +754,697 @@ We wil be following the ideas from the **Graphic continuum** by [Jon Schwabish](
 .center[<img src="https://media1.giphy.com/media/JEfkiZHu8Y0bS/200w.webp?cid=ecf05e47p6pmzuvxtw461hf4o70aktdguqxy78ucvkrgybm1&rid=200w.webp", width='70%'>]
 
 ---
+class: inverse, middle, center
 
-<!-- class: title-page, middle, center -->
+#Enough of R, Let's begin the real game.
 
-<!-- #One numeric variable -->
+---
+class: inverse
+#These classes are *massively* based on: 
+.pull-left[[<span style='font-size: 300%; color:black'> Statistics in a nutshell</span>](https://www.oreilly.com/library/view/statistics-in-a/9781449361129/)]
 
-<!-- --- -->
+.pull-right[<img src='https://learning.oreilly.com/library/cover/9781449361129/250w/'>]
+---
 
-<!-- #Histogram -->
+#Statistics is based on observations
 
-<!-- A histogram takes as input a numeric variable only. The variable is cut into several bins, and the number of observation per bin is represented by the height of the bar. It is possible to represent the distribution of several variable on the same axis using this technique. -->
+- Before you can use statistics to analyze a problem, you must convert information about the problem into *data*.
+
+- *Measurement* is the process of systematically assigning numbers to objects and their properties to facilitate the use of mathematics in studying and describing objects and their relationships
+
+--
+
++ Observations are tipically numbers but not restricted to it. . For instance, the categories male and female are commonly used in both science and everyday life to classify people, and there is nothing inherently numeric about these two categories.
+
+.center[<img src="https://media.giphy.com/media/9ADoZQgs0tyww/giphy.gif", width="30%">]
+
+---
+
+#Levels of Measurement
+
+Statisticians commonly distinguish four types or levels of measurement:
+
+- *Nominal Data*:  As the name implies, the numbers function as a name or label and do not have numeric meaning. Ex: 0/1 male or female.
+
+- *Ordinal Data*: Refers to data that has some meaningful order, so that higher values represent more of some characteristic than lower values. Ex: small, big.
+
+- *Interval Data*: Has a meaningful order and has the quality of equal intervals between measurements, representing equal changes in the quantity of whatever is being measured. Ex: Temperature
+
+- *Ratio Data*: has a meaningful order and has the quality of equal intervals between measurements, representing equal changes in the quantity of whatever is being measured. Ex: Physical measurements (height, weight).
+---
+
+#Continuous and Discrete Data
+
+ - *Continuous* data can take any value or any value within a range. Most data measured by *interval* and *ratio* scales, other than that based on counting, is continuous: for instance, weight, height, distance, and income are all continuous.
+ 
+ - *Discrete* variables can take on only particular values, and there are clear boundaries between those values. Ex: Number of siblings.
+ 
+---
+
+#Operationalization
+
+- Your problem **IS NOT** on *mathematics* os *statistics.* You should be really worried on understanding your study objects, your questions and your expectations.
+
+- Revisit your theoretical basis often.
+- Se what others have been doing.
+- *Be creative*! Science is not only repetition.
+-Some argue that measurement of even physical quantities such as length require operationalization because there are different ways to measure even concrete properties such as length.
+
+---
+
+#Proxy
+
+The term *proxy measurement* refers to the process of substituting one measurement for another.This is often considered of part of the operationalization.
+
+Ex: Body size is a good proxy for metabolic rates.
+
+- Finland has been considered the happiest country in the world.
+
+.center[<img src="https://media.giphy.com/media/j79FZdmgSAs2tjvbpF/giphy.gif">]
 
 
-<!-- ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5} -->
+---
 
-<!-- # Load dataset from github -->
-<!-- rooms <- read.table("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/1_OneNum.csv", header=TRUE) -->
+# True and Error Scores
 
-<!-- rooms %>% -->
-<!--   filter( price<300 ) %>% -->
-<!--   ggplot( aes(x=price)) + -->
-<!--     stat_bin(breaks=seq(0,300,10), alpha=0.9) + -->
-<!--     ggtitle("Night price distribution of Airbnb appartements") + -->
-<!--   theme_xaringan() + -->
-<!--   scale_xaringan_fill_continuous() -->
+We can safely assume that few, if any, measurements are completely accurate. This is true not only because measurements are made and recorded by human beings but also because the process of measurement often involves assigning discrete numbers to a continuous world.
+ 
+Classical measurement theory conceives of any measurement or observed score as consisting of two parts: **true score (T)** and **error (E)**.
+<br>
+<br>
 
+$$
+X = T + E
+$$
+A home scale might measures someone's weight as 70 kilograms when that person’s true weight is 69 kilograms. This would be expressed, using the preceding formula, as:
 
-<!-- ``` -->
-<!-- --- -->
+$$
+70 = 69 + 1
+$$
 
-<!-- #Density -->
+---
 
-<!-- A density plot shows the distribution of a `numeric` variable. It takes only `numeric` variables as input and is very close from an `histogram`. It can be use in the same exact condition. -->
-
-<!-- ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5} -->
-
-<!-- # Load dataset from github -->
-<!-- rooms <- read.table("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/1_OneNum.csv", header=TRUE) -->
-
-<!-- rooms %>% -->
-<!--   filter(price<300 ) %>% -->
-<!--   ggplot(aes(x=price)) + -->
-<!--     geom_density(alpha=0.7, bw=10, fill="#967bb6") + -->
-<!--     ggtitle("Night price distribution of Airbnb appartements") + -->
-<!--   theme_xaringan() + -->
-<!--   scale_xaringan_colour_continuous() -->
+#Random and Systematic Error
 
 
-<!-- ``` -->
+Because we live in the real world rather than a Platonic universe, we assume that all measurements contain some error. However, not all error is created equal, and we can learn to live with *random error* while doing whatever we can to avoid *systematic error*.
 
-<!-- --- -->
+- *Random error* is error due to chance: it has no particular pattern and is assumed to cancel itself out over repeated measurements.
+
+ - The value of the error component of any measurement is not related to the value of the true score for that measurement. *Ex: weight of multiple individuals*.
+ - The error component of each score is independent and unrelated to the error component for any other score. *Ex: Errors should not incresse or reduce the longer you carry an experiment.*
+
+- *Systematic error* has an observable pattern, is not due to chance, and often has a cause or causes that can be identified and remedied. *Ex: uncalibrated equipments, informing precise time using analogic watches.*
+
+---
+
+# Reliability
+
+ **Reliability** refers to how consistent or repeatable measurements are.
+
+ - *Multiple-occasions reliability*, sometimes called test-retest reliability, refers to how similarly a test or scale performs over repeated administration.
+ 
+ - *Multiple-forms reliability* (also called parallel-forms reliability) refers to howsimilarly different versions of a test or questionnaire perform in measuring the same entity. *Ex: Scholastic Aptitude Test.*
+ 
+ - *Internal consistency reliability* refers to how well the items that make up an instrument (for instance, a test or survey) reflect the same construct.
+ 
+---
+
+#Validity
+
+**Validity** refers to how well a test or rating scale measures what it is supposed to
+measure.
+
+*Content validity* refers to how well the process of measurement reflects the important
+content of the domain of interest and is of particular concern when the purpose of
+the measurement is to draw inferences about a larger domain of interest. *Ex: Examinations.*
+
+*Concurrent validity* refers to how well inferences drawn from a measurement can be
+used to predict some other behavior or performance that is measured at approximately
+the same time.
+
+*Predictive validity* similar to concurrent validity but related to future events.
+
+---
+
+#Measurement Bias
+
+*Bias* can enter studies in two primary ways: during the *selection and retention* of the
+subjects of study or in the way *information* is collected about the subjects. 
+
+- It is a source of *systematic* error.
+- Might result in incorrect inferences and conclusions irrespectively to statistical procedures.
+
+###Selection bias
+
+Exists if some potential subjects are more likely than others to be selected
+for the study sample.
+
+*Volunteer bias* refers to the fact that people who volunteer to be in studies are usually
+not representative of the population as a whole. The contrary is the *Nonresponse bias*.
+
+*Informative censoring* can create bias in any longitudinal study (a study in which
+subjects are followed over a period of time). Losing subjects during a long-term study
+is a common occurrence, but the real problem comes when subjects do not drop out
+at random but for reasons related to the study’s purpose.
+
+---
+
+###Information Bias
+
+When the methods used to collect or record the data affect the validity of the information upon the study is based. 
+
+*Recall bias* refers to the fact that people with a life experience such as suffering from
+a serious disease or injury are more likely to remember events that they believe are
+related to that experience.
+
+*Detection bias* refers to the fact that certain characteristics may be more likely to be
+detected or reported in some people than in others.
+
+*Social desirability bias* is caused by people’s desire to present themselves in a favorable
+light. This often motivates them to give responses that they believe will please
+the person asking the question.
+
+
+---
+class: top, left
+background-image: url(https://israelbehindthenews.com/wp-content/uploads/2019/09/Match-Toss-Prediction.jpg)
+background-size: cover
+#Probability
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+
+###Caio Graco-Roza<br>Marcelo Manzi Marinho
+
+---
+class: inverse, top, center
+
+#Are you afraid of formulas? 
+
+--
+
+###...well, you shouldn't!
+
+<img src="https://media.giphy.com/media/5ll5vRkqUETvy/giphy.gif">
+
+---
+
+#Formulas
+
+Can you understand this ultimate level of math?
+
+$$
+\frac{1}{n}\sum_{i=1}^{n}x_i
+$$
+--
+<br>
+<br>
+.pull-left[
+Now applying it to real numbers:
+
+$$
+\overline{x}= \frac{1}{3}\sum_{i=1}^{3}x_i = \frac{1}{3} (1+3+5) = 3
+$$
+ 
+]
+--
+.pull-right[<img src="https://media3.giphy.com/media/sgswHaZw5yklq/giphy.webp?cid=ecf05e47lw7wpw74qerb865jhhmw9hh1bfm40d9zykddq59v&rid=giphy.webp", width=60%>]
+
+
+---
+class:middle, center
+
+#What about some basics before we dig into more formulas?
+
+<img src='https://media1.giphy.com/media/26DN8uOO9Dv0gLpbG/giphy.gif?cid=ecf05e47e2ronzuosxnz84on9p78j7gllb7yl5knvfemujte&rid=giphy.gif'>
+
+
+---
+
+#Basics
+
+- Probability is concerned with the outcome of **trials**, which are also called experiments
+or observations.
+
+- The **sample space**, signified by S, is the set of all possible elementary outcomes of a
+trial.
+
+- An **event**, usually signified by E or any capital letter other than S, is the specification
+of the outcome of a trial and can consist of a single outcome or a set of outcomes.
+
+A common way to portray the probability of events and combinations of events
+graphically is through Venn diagrams.
+<br><br>
+--
+.pull-left[<img src='https://dr282zn36sxxg.cloudfront.net/datastreams/f-d%3Aa499b7d235ca3fade0f77b770bf4869fc84f7bb690ff64f2e01162cb%2BIMAGE%2BIMAGE.1'>]
+--
+
+.pull-right[<img src='https://media1.giphy.com/media/xT1R9IbXJT7NsBQG9W/giphy.gif?cid=ecf05e473c8ww1al0r0j5iaw4x20bu2i3mja3xt70ol2banq&rid=giphy.gif'>]
+
+
+---
+
+#Combining probabilities
+
+**Union**: The union of several simple events creates a compound event that occurs if one or more of the events occur. Written as A ∪ B meaning either "A or B or both A and B".
+
+**Intersection**: The intersection of two or more simple events creates a compound event that occurs only if all the simple events occur.  Written as A ∩ B and
+meaning “both A and B.”
+
+**Complement**: The complement of an event means everything in the sample space that is not that event. Written as $\sim{A}$, $A^{\complement}$, $\overline{A}$ , or $A'$ meaning "not A" or "A complement".
+
+**Mutual exclusivity**: When events in the sets A and B do not occur together.
+
+**Independency**: If two trials are *independent*, the outcome of one trial does not influence the outcome of another.
+
+---
+
+#Combining probabilities
+
+.center[<img src='https://miro.medium.com/max/4800/1*RhZM4JJnN0yljVmYn7DRsg.png', width=70%>]
+.footnote[source: [Probability Rules Cheat Sheet](source:https://medium.com/data-comet/probability-rules-cheat-sheet-e24b92a9017f)]
+
+---
+
+#Permutations
+
+In probability theory, permutations are all the possible ways elements in a set can be arranged. For a set $A = (a,b,c)$ permutations are $(a, b, c)$, $(a, c, b)$, $(b, a, c)$, $(b, c, a)$, $(c, a, b)$, and $(c, b, a)$.
+
+The permutations of a set with distinct elements can be calculated using *factorials*.  
+
+$$
+3! = 3 \times 2 \times 1 = 6
+$$
+
+--
+
+The number of permutations get large very quickly, such that it is usually expressed in computers through **scientific notation**. e.g.: $37! = 1.376375E43$
+
+.center[<img src='https://media3.giphy.com/media/RhPvGbWK78A0/200.webp?cid=ecf05e47sdbwezkgyfkox7uyvamna3czn6d6f3kx32sr5kuv&rid=200.webp'>]
+---
+
+#Combinations
+
+One may see combinations as permutations that do not allow reshuffling elements.
+Therefore, for the set $A$ from before there is only one possible combination of the elements $(a, b, c)$.
+
+One use of combinations and permutations in statistics is to calculate the number
+of ways a subset of specified size can be drawn from a set, which allows the calculation of the probability of drawing any particular subset from a set.
+
+One is able to infer the number of permutations of $k$ elements in the set $A$ by using:
+
+$$
+nPk = \frac{n!}{(n-k)!} = 3P2 = \frac{3!}{(3-2)!} = \frac{3 \times 2 \times 1}{1 \times 1} = \frac{6}{1} = 6
+$$
+
+Specifically, $(a, c)$, $(b, c)$, $(b, a)$, $(c, a)$, and $(c, b)$.
+
+.center[<img src='https://media1.giphy.com/media/3o7qE1Thg4KxFpMGSk/200w.webp?cid=ecf05e47gwyq5nh5niyeg7ztomft9vsx1usr91bs3d9g9h1k&rid=200w.webp', width=30%>]
+
+---
+
+#Combinations 
+
+What if we do not want repeated combinations with different ordering.
+
+$$
+nPk = \frac{n!}{k!(n-k)!} = 3P2 = \frac{3!}{(2 \times 1) (3-2)!} = \frac{3 \times 2 \times 1}{2 \times 1 \times 1} = \frac{6}{2} = 3
+$$
+
+--
+
+.center[<img src="https://media2.giphy.com/media/2sddCIZRYfiPlNeLZn/200.webp?cid=ecf05e47pbosiotgx2f6jtvymwujb9go75n5059ouj1bfujd&rid=200.webp" width=60%>]
+
+---
+
+#Defining probability
+
+There are several technical ways to define probability, but a definition useful for
+statistics is that probability tells us **how often something is likely to occur when an experiment is repeated**.
+
+Fun facts: 
+
+- The $P$robability of an $E$vent is always between 0 and 1. a.k.a $0 \leq P(E) \leq 1$
+- The $P$robability of the $S$ample space is always 1. a.k.a $P(S) = 1$
+- The $P$robability of an $E$vent and its **complement** is always 1. a.k.a $P(E) + P(E') = 0$ 
+
+###Conditional Probabilities
+
+The probability of some event, given that another event has
+occurred. Expressed as $P(A|B)$.
+
+Conditional probabilities can also be used to define independence. $P(A|B) = P(A)$.
+
+---
+
+#Estimating probabilities
+
+- Union of mutually exclusive events: $P(A \cup B) = P(A) + P(B)$
+- Intersection of independent events: $P(A \cap B) = P(A) \times P(B)$
+- Union of events that are not mutually exclusive: $P(A \cup B) = P(A) + P(B) - P(A \cap B)$
+- Intersection of nonindependent events: $P(A \cap B) = P(A) \times P(B|A)$
+
+### Bayes' theorem
+
+Bayes’ theorem, also known as Bayes’ formula, is one of the most common applications
+of conditional probabilities. Written as:
+
+$$
+P(A|B) = \frac{P(B|A) P(A)}{P(B|A) P(A) + P(B|A') P(A')}
+$$
+
+---
+
+#Bayes' theorem.
+
+Suppose you have a screening test that is 95% effective in detecting disease in those
+who have the disease and 99% effective in not falsely diagnosing disease in those
+who are free of it. Suppose also that the rate of disease in the population is 1%.
+
+ - For an individual who has tested positive, what is the probability that he actually has the disease?
+ - Let $D$ be the set for the disease and $T$ be the set for the testing.
+ 
+ Use Bayes' theorem to get the answer:
+ 
+ $$
+ P(D|T) = \frac{P(D \cap T)}{P(T)} = \frac{(0.01)(0.95)}{(0.01)(0.95) + (0.01)(0.99)} = \frac{0.0095}{0.0095 + 0.00099} = 0.49
+ $$
+
+In this example, you expect that about half the people who test positive will be
+false positives, that is that they won’t have the disease.
+
+There is an entire field of study today known as **Bayesian statistics**, which is
+based on the notion of probability as a statement of **strength of belief** rather than
+as a **frequency of occurrence**.
+
+---
+
+background-image: url(https://luminousmen.com/media/descriptive-and-inferential-statistics.jpeg)
+background-size: cover
+
+---
+
+#Inferential Statistics
+
+*Populations and Samples:* The same data set may be considered as either a population or a sample, depending on the reason for its collection and analysis.
+
+--
+
+- Analyzing a *population* means your data set is the complete population of interest, so you are performing your calculations on all members of the group of interest to you and can make direct
+statements about the characteristics of that group.
+
+- Analyzing a sample means you are working with a subset drawn from a larger population, and any
+statements made about the larger group from which your sample was drawn are **probabilistic** rather than **absolute**.
+
+- Numbers that describe a population are referred to as parameters and are signified by Greek letters such as $\mu$ (for the population mean) and $\sigma$ (for the population standard deviation); numbers that describe a sample are referred to as statistics and are signified by Latin letters such as $\overline{x}$ (the sample mean) and $s$ (the sample standard deviation).
+
+---
+
+#Measures of central tendency
+
+The mean: The *arithmetic* mean, or simply the mean, is often referred to in ordinary speech as
+the average of a set of values.
+
+The mean is an intuitive measure of central tendency that is easy for most people to understand. However, the mean is not an appropriate summary measure for every data set because it is sensitive to extreme values, also known as **outliers** and can also be misleading for **skewed** (We will get to that later) data.
+
+For example: $\mu =  (100 + 115 + 93 + 102 + 297)/5 = 707/5 = 141.4)$
+
+Is this mean a true representation of the central tendency?
+
+The mean can also be drawn from a frequency table as $\frac{\sum_{i}^{n}(x_if_i)}{\sum_{i=1}^{n}f_i}$
+
+
+---
+
+#The Median
+
+The median of a data set is the middle value when the values are ranked in ascending
+or descending order. If there are n values, the median is formally defined as the $\frac{(n+1)}{x}th$ element, but in the case of a set of values with even number of observations then it is expressed as the **average of the two middle values**. This can be formally expressed as the average of the $(n /2)th$ and $((n /2)+1)th$ elements.
+
+Examples to never forget:
+
+- Odd number (5) of values: 1, 4, 6, 6, 10; Median = 6 because $(5+1)/2=3$, and
+$6$ is the third value in the ordered list.
+
+- Even number (6) of values: 1, 3, 5, 6, 10, 15; Median = $(5+6)/2 = 5.5$ because
+6/2 = 3 and [(6/2) +1] = 4, and 5 and 6 are the third and fourth values in the ordered list.
+
+---
+
+#The Mode
+
+A third common measure of central tendency is the **mode**, which refers to the most
+frequently occurring value. The mode is most often useful in describing ordinal or
+categorical data.
+
+---
+
+#Measures of Dispersion
+
+Dispersion refers to how variable or spread out data values are. For this reason,
+measures of dispersions are sometimes called measures of variability or measures of
+spread.
+
+###The Variance and Standard Deviation
+
+The variance and standard deviation are calculated slightly differently depending on whether a population or a sample is being studied, but basically the variance is the average of the squared deviations from the mean, and the standard deviation is the square root of the variance. The variance of a population is signified by $\sigma^2$ (pronounced “sigma-squared”; $\sigma$ is the Greek letter sigma) and the standard deviation as $\sigma$, whereas the sample variance and standard deviation are signified by $s^2$ and $s$, respectively.
+
+$$
+Variance(\sigma^2) = \frac{\sum_{i=1}^{n}(x_i - \overline{x})^2} {n}
+$$
+
+$$
+SD(\sigma^2) = \sqrt{\frac{\sum_{i=1}^{n}(x_i - \overline{x})^2} {n}}
+$$
+
+---
+
+#Inferential statistics
+
+Statistical inference is the science of characterizing or making decisions about a
+population by using information from a sample drawn from that population.
+
+If the cases you are studying represent the entire population of interest, and you
+do not wish to generalize beyond those cases, you should be using descriptive
+statistics.
+If the cases you are studying do not represent the entire population of interest,
+and you do wish to generalize beyond those cases, you should be doing inferential
+statistics.
+
+---
+
+#The Normal Distribution
+
+The normal distribution is arguably the most commonly used distribution in statistics. This is partly because the normal distribution is a reasonable description of how many continuous variables are distributed in reality, from industrial process variation to intelligence test scores.
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5}
+ggplot(data = data.frame(x = c(-5, 5)), aes(x)) +
+  stat_function(
+    fun = dnorm,
+    n = 101,
+    args = list(mean = 0, sd = 2.24),
+    colour = 'black',
+    size = 2
+  ) +
+  stat_function(
+    fun = dnorm,
+    n = 101,
+    args = list(mean = 0, sd = 0.45),
+    colour = '#967bb6',
+    size = 2
+  ) +
+  stat_function(
+    fun = dnorm,
+    n = 101,
+    args = list(mean = -2, sd = 0.71),
+    colour = '#006600',
+    size = 2
+  ) +
+    annotate(
+    "text",
+    y = c(0.9, 0.8,0.7),
+    x = 4,
+    label = c("Mean = 0, sd = 2.24",
+              "Mean = 0, sd = 0.45",
+              "Mean = -2, sd = 0.71"),
+    size = 6,
+    col = c("black", "#967bb6", "#006600")
+  ) +
+  ylab("") +
+  theme_xaringan()
+
+  
+```
+---
+
+###Normal distribution 
+
+All normal distributions, regardless of their mean and standard deviation, share
+certain characteristics. These include:
+
+- Symmetry
+- Unimodality (a single most common value)
+- A continuous range from −∞ to +∞ (from negative infinity to positive infinity)
+- A total area under the curve of 1
+- A common value for the mean, median, and mode
+
+###Z score
+
+
+A Z-score is the distance of a data point from the mean, expressed in units of standard
+deviation.
+
+$$
+Z = \frac{x-\mu}{\sigma}
+$$
+
+For this reason, Z-scores are sometimes referred to as *normalized*
+scores, the process of converting raw scores to Z-scores as normalizing the scores,
+and the standard normal distribution as the *Z distribution*.
+
+---
+
+#The Binomial Distribution
+
+We will use the **binomial distribution** as an example of a discrete distribution, that
+is, a distribution for a variable for which only certain values are possible. 
+
+Events in a **binomial distribution** are generated by a *Bernoulli* process. A single trial
+within a *Bernoulli* process is called a *Bernoulli* trial. The binomial distribution describes
+the number of successes in n trials of a Bernoulli process.
+
+The binomial distribution is calculated as
+$$
+\binom{n}{k}=p^k(1-p)^{n-k}
+$$
+
+---
+#The Binomial Distribution
+
+As $n$ increases, holding $p$ constant, the binomial distribution more closely resembles
+the normal distribution.
+
+.center[
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=7, fig.height=3}
+data.frame(x = 1:40,
+           dbin1 = dbinom(1:40, 20, prob = 0.5)) %>%
+  ggplot() +
+  geom_line(aes(x = x, y = dbin1), colour = 'black', size = 2) +
+  geom_line(aes(x = 1:40, y = dbinom(1:40, 20, 0.7)), colour = 'purple', size =
+              2) +
+  geom_line(aes(x = 1:40, y = dbinom(1:40, 40, 0.5)), colour = 'darkgreen', size =
+              2) +
+  annotate(
+    "text",
+    y = c(0.19, 0.17, 0.15),
+    x = 30,
+    label = c("n = 20; p = 0.5",
+              "n = 20; p = 0.7",
+              "n = 40; p = 0.5"),
+    size = 6,
+    col = c("black", "purple", "darkgreen")
+  ) +
+  theme_xaringan()+
+  ylab("Probablity")+
+  xlab("Observations")+
+  xlim(0,35)
+
+  
+```
+]
+
+Suppose we are flipping a fair coin five times; what is the probability that we will
+get exactly one head? We will define “heads” as a success and use the binomial
+formula to solve this problem.
+
+Define $p$, $k$, $n$.
+
+---
+
+##Solution (Binomial distribution)
+
+Given that $p = 0.5$; $n = 5$; and $k = 1$, solve:
+
+$$
+\binom{n}{k}=p^k(1-p)^{n-k}
+$$
+
+--
+
+$$
+P(k=1;5;0.5) = \binom{5}{1}0.5^1(1-0.5)^{5-1} = 5 \times (0.5)^1 \times (0.5)^4 = 0.16
+$$
+
+---
+
+#The Central Limit Theorem
+
+The central limit theorem states that the sampling distribution of the sample mean
+approximates the normal distribution, regardless of the distribution of the population
+from which the samples are drawn if the sample size is sufficiently large.
+
+.pull-left[
+```{r, echo=FALSE,warning=FALSE, message=FALSE}
+x<-data.frame(x=runif(100))
+ggplot(x) +
+  geom_histogram(aes(x))+
+  xlab("Population values")+
+  theme_xaringan()
+```
+]
+
+--
+
+.pull-right[
+```{r, echo=FALSE,warning=FALSE, message=FALSE}
+z<-c()
+for (i in 1:100){
+  z[i]<-mean(sample(x$x,20))
+}
+
+ggplot(data.frame(z)) +
+  geom_histogram(aes(z))+
+  xlab("Mean of 25 individual values.\nResampled 100 times")+
+  theme_xaringan()
+```
+]
+
+---
+
+#Confidence Intervals
+
+The interval between two values that represent the upper and lower *confidence* limits or *confidence*
+bounds for a statistic.
+
+- It is calculated using a predetermined significance level, often called α (the Greek letter alpha), which is most often set at 0.05, as discussed previously. Thus, if $\alpha = 0.05$, the confidence coefficient is 0.95 or 95%.
+
+- Confidence intervals are based on the idea that if a study were repeated an infinite number of times, each time drawing a different sample of the same size from the same population, and a confidence interval based on each sample were constructed, $x$% of the time the confidence interval would contain the true parameter value that the study seeks to estimate, where $x$ is the size of the confidence interval.
+
+
+---
+
+#p-values
+
+A *p-value* expresses the probability that results **at least as extreme** as those obtained
+in an analysis of sample data are due to chance.
+
+ - It is related to the null hypothesis.
+ - Gets smaller with increasing $n$
+ - Gets smaller with increasing between-group differences in mean.
+ - Gets larger with increasing the variance of two groups.
+ 
+
+---
+
+
+
+
+

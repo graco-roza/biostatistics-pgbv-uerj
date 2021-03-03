@@ -14,3 +14,6 @@ xaringanthemer
 xaringanBuilder
 nycflights13
 patchwork
+futile.logger
+VennDiagram
+ggvenn
