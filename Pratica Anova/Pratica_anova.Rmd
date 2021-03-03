@@ -229,7 +229,6 @@ Vamos gerar agora uma tabela com os resultados calculados por nós.
 tribble(~"Fonte de variação", ~"GL", ~"SQD", ~"QM", ~ "F", ~"p",
          "Entre tratamentos",GL_entre, round(SQD_entre,2), round(QM_entre,2), round(Valor_F,2), round(valor_P,11),
          "Dentro dos tratamentos", GL_dentro,round(SQD_dentro,2),round(QM_dentro,2), NA,NA) %>%
-  
   kbl(caption = "Resultados da Análise de Variância", digits=16) %>%
   kable_classic(full_width = F, html_font = "Cambria")
 ```    

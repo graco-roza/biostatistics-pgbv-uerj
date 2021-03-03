@@ -17,3 +17,9 @@ patchwork
 futile.logger
 VennDiagram
 ggvenn
+kableExtra
+permute
+lattice
+vegan
+GGally
+knitr
