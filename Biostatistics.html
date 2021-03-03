@@ -1,0 +1,2048 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Biostatistics  </title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Caio Graco-Roza Marcelo Manzi Marinho" />
+    <script src="Biostatistics_files/header-attrs/header-attrs.js"></script>
+    <link href="Biostatistics_files/tachyons/tachyons.min.css" rel="stylesheet" />
+    <script src="Biostatistics_files/xaringanExtra_fit-screen/fit-screen.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# <b>Biostatistics</b><br><br>
+## <i>What to do with data? Tidying, transforming and vizualizing data.</i><br><br>
+### Caio Graco-Roza<br>Marcelo Manzi Marinho
+
+---
+
+
+
+#Teaching staff
+
+
+.pull-left[
+
+&lt;img src="https://pbs.twimg.com/profile_images/1199245327657779200/HnASqQmP_400x400.jpg", style="border-radius:50%", width="70%"&gt;
+
+&lt;img src="https://i1.rgstatic.net/ii/institution.image/AS%3A267458164789257%401440778403888_l" width="10%"&gt; [Marcelo Manzi Marinho](https://www.researchgate.net/profile/Marcelo-Marinho-2) &lt;br&gt;
+&lt;img src="https://cdn4.iconfinder.com/data/icons/social-media-icons-the-circle-set/48/twitter_circle-512.png" width="10%"&gt; [@Marcelomanzi2](https://twitter.com/MarceloManzi2)
+]
+
+
+.pull-right[
+
+&lt;img src="https://avatars.githubusercontent.com/u/61427460?s=460&amp;u=33ea31eae08fcc6964213c76e76f52b96d6b8c30&amp;v=4", style="border-radius:50%", width="70%"&gt;
+
+&lt;img src="https://i1.rgstatic.net/ii/institution.image/AS%3A267458164789257%401440778403888_l" width="10%"&gt; [Caio Graco-Roza](https://www.researchgate.net/profile/Caio-Roza)
+&lt;br&gt;
+&lt;img src="https://cdn4.iconfinder.com/data/icons/social-media-icons-the-circle-set/48/twitter_circle-512.png" width="10%"&gt; [@GracoRoza](https://twitter.com/GracoRoza)
+]
+
+---
+class: center, middle
+
+# Introduction to statistics
+
+### Using the R environment.
+
+---
+class: inverse, center, middle
+
+# Ready?
+
+---
+class: left, top
+.pull-left[
+# These classes are based on 
+## [R for data Science](https://r4ds.had.co.nz/)
+]
+
+.pull-right[&lt;img src="https://d33wubrfki0l68.cloudfront.net/b88ef926a004b0fce72b2526b0b5c4413666a4cb/24a30/cover.png" align="center" /&gt;]
+---
+class: left, middle
+
+.pull-left[
+
+## [Hands on Programming with R](https://rstudio-education.github.io/hopr/basics.html)
+]
+.pull-right[&lt;img src="https://rstudio-education.github.io/hopr/cover.png", width="100%",  align="center"/&gt;]
+---
+class: left, middle
+.pull-left[
+
+## [ggplot2: Elegant Graphics for Data Analysis.](https://ggplot2-book.org/)
+]
+ 
+.pull-right[&lt;img src="https://ggplot2-book.org/cover.jpg" align="center" /&gt;]
+
+---
+class: center, middle
+
+#Why are we all here?
+
+&lt;img src="https://i.pinimg.com/564x/f4/0d/b6/f40db6a7fb36ce7cd9138f68067ee915.jpg", width="70%", align="center"/&gt;  
+
+--
+
+## We are here to study **Statistics** and practice some **Data science**.
+
+---
+class: center, middle
+#Statistics
+
+--
+The practice or science of collecting and analysing numerical data in large quantities, especially for the purpose of inferring **proportions** in a whole from those in a **representative** sample.
+--
+
+#Data science  
+
+Aims to turn raw data into understanding, insight, and knowledge. 
+
+--
+
+Data science combines multi-disciplinary fields and computing to interpret data for decision making whereas statistics refers to mathematical analysis which use quantified models to represent a given set of data.
+
+--
+.center[**Statistics + Data Science**]
+.center[&lt;img src="https://media0.giphy.com/media/26ufdipQqU2lhNA4g/giphy.webp?cid=ecf05e47yn28u672t7arxzimvz33xcwcwp7qxm5iuo62c8il&amp;rid=giphy.webp", width="20%", align="center"/&gt;]
+
+---
+class: left, top
+
+#How do we work?
+
+Here's a usual framework of a data science project.
+
+.center[![Workflow](https://d33wubrfki0l68.cloudfront.net/571b056757d68e6df81a3e3853f54d3c76ad6efc/32d37/diagrams/data-science.png)]
+
+In biological sciences we often:
+- Substitute the `Import` by `Collect` as we generate our own data.
+- Do the whole `Tidying` using excel or even additional notebooks.
+- Perform the `Transform`, `Visualise` and `Model` using multiple software that our labs may or may not have money to buy a license.
+- `Communicate` our findings as reports or papers published in indexed journals.
+
+---
+
+#Drawbacks of the actual approach
+
+--
+- Several tutorials with different guidelines leaving no time for social media.
+
+--
+- Several premium licenses leaving no extra money for traveling (Ok, for buying reagents).
+
+--
+- You really have no idea of what's going on behind the curtains (meaning closed-source code).
+
+--
+##How can we solve such huge problems?
+
+--
+
+&lt;img src="https://cran.r-project.org/Rlogo.svg", width="20%", align="left"&gt; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;img src="https://d33wubrfki0l68.cloudfront.net/521a038ed009b97bf73eb0a653b1cb7e66645231/8e3fd/assets/img/rstudio-icon.png", width=20%, align="center"&gt; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&lt;img src="https://wizardsourcer.com/wp-content/uploads/2019/03/Stackoverflow.png", width=40%, align="center"&gt;
+
+
+---
+
+# What is R?
+.pull-left[
+- `R` is both a programming language and software environment for statistical computing, which is *free* and *open-source*.  
+
+- `R` is an implementation of the `S` programming language, which was created by Ross Ihahka and Robert Gentlemen at the University of Auckland”
+ ]
+
+.pull-right[&lt;img src="https://cran.r-project.org/Rlogo.svg", width="100%", align="left"&gt;]
+&lt;br&gt;
+
+#Why R Studio?
+
+RStudio gives you a way to talk to your computer. R gives you a language to speak in.  
+
+
+---
+
+#R User Interface
+
+&lt;img src="https://rstudio-education.github.io/hopr/images/hopr_0101.png", width="70%", align="right"&gt;
+
+The `RStudio` interface is simple. You type R code into the bottom line of the **RStudio console** pane and then click Enter to run it. The code you type is called a command, because it will command your computer to do something for you. The line you type it into is called the command line.
+&lt;br&gt;
+
+The interface is divided also into a **Workspace Browser** and **Plots**. These can also be adjusted under the `Tools (or Preferences) &gt; Global options &gt; Pane layout` menu. Let's now inspect each pane more closely.
+
+
+---
+class:   left, top
+#R User Interface
+
+## Console
+
+This is where you can type code that executes immediately. This is also known as the command line.
+
+Entering code in the command line is intuitive and easy. For example, we can use R as a calculator by typing into the Console (and pressing Enter after each line):
+
+
+```r
+3+2
+```
+
+```
+## [1] 5
+```
+
+You’ll notice that a [1] appears next to your result. R is just letting you know that this line begins with the first value in your result.
+
+
+---
+class:   left, top
+
+#R User Interface
+
+## Console
+
+Sometimes R outputs may encompass several lines. In that case, each line will begin with the brackets [] indicating the position of the first object in the output. e.g.:
+
+
+```r
+100:150
+```
+
+```
+##  [1] 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118
+## [20] 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137
+## [39] 138 139 140 141 142 143 144 145 146 147 148 149 150
+```
+
+&gt;The colon operator (:) returns every integer between two integers*. It is an easy way to create a sequence of numbers.
+
+.footnote[[*] [Whole-valued positive or negative number or 0](https://www.britannica.com/science/integer).]
+--
+
+---
+class:   left, top
+
+#R User Interface
+
+## Console
+
+Nothing is perfect, so there are also some situations where you tap Enter before finishing the code:
+
+&gt;5+ &lt;br&gt;
+`+` 
+
+R shows you then the **+** in the next line of the console indicating that you may finnish the command.&lt;br&gt; 
+
+```r
+5+
++
+1
+```
+
+```
+## [1] 6
+```
+---
+#R User Interface
+
+## Console
+
+In other situations you may find real Errors:
+
+
+```r
+&gt; 3 % 5
+Error: unexpected input in "3 % 5"
+&gt;
+```
+---
+#R User Interface
+
+## Console
+
+# The sky is the limit!!.pull-right[&lt;img src="https://media4.giphy.com/media/12R2bKfxceemNq/giphy.webp?cid=ecf05e47mg84pbdjuaq9xl1ky5vesmynvaqvs1fubqbpcv6v&amp;rid=giphy.webp", align="right"&gt;]
+
+With all the things we learned until now, let's practice:
+
++ Choose any number and add 2 to it.
++ Multiply the result by 3.
++ Subtract 6 from the answer.
++ Divide what you get by 3.
+
+&gt; 10 minutes exercise.
+
+---
+
+class: inverse, center, middle
+
+#Break! 15 minutes 🕔&amp;nbsp;☕
+
+
+---
+
+# Solution
+
+If you did all correctly you may have in the final step the value you chose to start with.
+
+
+```r
+5+2
+```
+
+```
+## [1] 7
+```
+
+```r
+7*3
+```
+
+```
+## [1] 21
+```
+
+```r
+21-6
+```
+
+```
+## [1] 15
+```
+
+```r
+15/3
+```
+
+```
+## [1] 5
+```
+
+---
+#R User Interface
+
+##Console 
+
+In addition, the **Console** title bar has a few useful features:
+
+- It displays the current R working directory (more on this later)
+
+- It provides the ability to interrupt R during a long computation (a stop sign will appear whilst code is running)
+
+- It allows you to minimise and maximise the Console in relation to the Source pane using the buttons at the top-right or by double-clicking the title bar)
+
+---
+
+#R User Interface
+
+##Environment and history panes
+
+The Environment pane is very useful as it shows you what objects **(i.e., dataframes, arrays, values and functions)* ** you have in your environment (workspace). You can see the values for objects with a single value and for those that are longer R will tell you their class.
+
+Typing the following into the Console will list everything you’ve loaded into the Environment:
+
+
+```r
+ls() 
+```
+
+```
+## character(0)
+```
+
+Conclusion: There are no objects in the Environment.
+
+
+.footnote[[*] We will get to this later, don't worry.]
+
+---
+# R User Interface
+
+##  Files, Plots, Packages, Help, and Viewer panes
+
+- *Files*: Allows you to navigate in the folders just like using the operational system.  
++ *Plots*: This is where the graphics will appear.
+- *Packages*: hows you the packages that are installed and those that can be installed.
++ *Help*: Allows you to search the R documentation for help and is where the help appears when you ask for it from the *Console*.
+ &gt;Try typing `?mean` or `help(mean)` in the console.
+
+---
+# R User Interface
+
+##  Source Editor
+
+Generally we will want to write codes that are longer than a couple of lines. We want this (yes, ***you want it too!***) because we believe we will repeat the same steps many many times (**routinely**) that would be boring to write it all over again always when we need it .
+
+These files are commonly called scripts and they work like a recipe of a cake. We need to include all the ingredients in the right order in order to get a [tastemade](https://www.tastemade.com.br/)-like cake.
+
+You may create a new *R script* using `File &gt; New File &gt; R script`.
+
+Note scripts files are simply standard text files and can be created in any text editor and saved with a .R (or .r) extension, but the Source editor in RStudio has the advantage of providing syntax highlighting, code completion, and smart indentation.
+---
+# R scripts
+By using R scripts you may be interested in storing the results of e.g., equations, transformations or functions to be used later on. This can be easily done by assigning values to *objects*
+
+
+```r
+result &lt;- 5+6 
+```
+
+By running the line above you will not get any results in the console. However, there is an simple way to show it. Simply type the name of the object you assigned and click CTRL + Enter.
+
+
+```r
+result
+```
+
+```
+## [1] 11
+```
+
+&gt; The symbol `&lt;-`shows the direction to which the objects are assigned. It can be substituted by `=`but we avoid it for good coding* practices.
+
+.footnote[[*] See [Hadley Wickham Style Guide](http://adv-r.had.co.nz/Style.html) for more details on writing practices.]
+
+---
+
+# Objects
+
+R lets you save data by storing it inside an R object. What is an object? Just a name that you can use to call up stored data. For example, you can save data into an object like a or b. Wherever R encounters the object, it will replace it with the data saved inside.
+
+
+```r
+result + 2
+```
+
+```
+## [1] 13
+```
+
+You can name an object in R almost anything you want, but there are a few rules. First, a name cannot start with a number. Second, a name cannot use some special symbols, like `^`, `!`, `$`, `@`, `+`, `- `, `/`, or `*`.
+
+&gt; Note that R is case sensitive so writing names e.g., `Results` and `results` will create two different objects.
+
+
+---
+
+#Functions
+
+R comes with many functions that you can use to do sophisticated tasks like taking a log or the square root of a number. Some functions involve more than one commands, for example, you can round a number with the `round` function, or calculate its factorial with the `factorial` function.
+
+
+```r
+round(2.6)
+```
+
+```
+## [1] 3
+```
+
+```r
+factorial(3) # 3*2*1 (3!)
+```
+
+```
+## [1] 6
+```
+
+&gt; R treats the hashtag character, #, in a special way; R will not run anything that follows a hashtag on a line
+
+
+---
+
+#R Packages
+
+R comes with a number of built-in functions and datasets, but one of the main strengths of R as an open-source project is its package system. That allows many professors, programmers, and statisticians to design and release tools using R to help people analyze data.
+
+To install a package, use the install.packages() function. Think of this as
+buying a recipe book from the store, bringing it home, and putting it on your
+shelf.
+
+
+```r
+install.packages("tidyverse") #To install
+
+library("tidyverse") # To load
+```
+
+Packages must be installed only once per computer prior using, while loading a package should be done once per R session. 
+
+---
+
+#Practice
+
+What about exploring the R universe a little bit before we go deeper into data analysis?
+
+Go to the **Environment ans History pane** click on the `Tutorial` tab and go through the Tutorials (Except for "Tutorial Quiz" and "Slidly demo").
+
+Make notes on your doubts and let's check together tomorrow.
+
+---
+#Resources in portuguese
+
+##[Estatística aplicada ao R](https://1drv.ms/b/s!AqfDu8POzxNrthdJuDmUE4h6znmR?e=pesqTq)
+##[Introdução ao R](https://1drv.ms/b/s!AqfDu8POzxNrthZB7G3OJwH5hFrE?e=FIgod1)
+##[Principios de Estatistica em Ecologia](https://1drv.ms/b/s!AqfDu8POzxNr505WNuRTP378WBrf?e=pVnRJm)
+---
+class:   center, middle
+
+#&lt;img src="https://media3.giphy.com/media/l4pTjOu0NsrLApt0Q/200.webp?cid=ecf05e47x8rghx27ay8y9cyxqe0scgcxtfkj967zwedqobwo&amp;rid=200.webp", width="200%"&gt;
+
+
+---
+class: inverse, center, middle
+
+#Data visualization
+
+---
+
+class: center, middle
+
+#Frustration is natural when you start programming in R!
+--
+&lt;img src="https://media3.giphy.com/media/dTWMMFwgtmc1Gcghm2/200w.webp?cid=ecf05e479vyi7liq7d3001ih6zmwge3f0ifgyjz0hr8v5069&amp;rid=200w.webp", width="70%"&gt;
+
+---
+
+#Persistance is the key
+
+## Let's review some basics
+
+Remember that R is a very efficient calculator
+.pull-left[
+
+```r
+1 / 200 * 30
+# &gt; [1] 0.15
+(59 + 73 + 2) / 3
+# &gt; [1] 44.66667
+sin(pi / 2)
+# &gt; [1] 1
+```
+We often use `&lt;-` to give *names* to values and call them `objects`.
+
+
+```r
+x &lt;- 3 * 4
+```
+]
+.pull-right[
+&lt;img src="https://media2.giphy.com/media/APqEbxBsVlkWSuFpth/giphy.webp?cid=ecf05e47v4uldhewzt26r4u4crrgeh0x79jrs1dwp7sbj7gx&amp;rid=giphy.webp", width="80%"&gt;]
+
+---
+class: center, top
+#Visualization is important, but tidying is paramount.
+--
+
+&lt;img src="https://media4.giphy.com/media/KE9cblgPK6EPS/200w.webp?cid=ecf05e47w3qvr0c299vlu8hi8xjjqgl1syn3t7e16iebei6y&amp;rid=200w.webp", width="70%"&gt;
+
+---
+
+#Working on transformation
+
+.pull-left[
+&lt;img src="https://media0.giphy.com/media/TJHcpldoI0zAY/200.webp?cid=ecf05e477orlaj6p24o3kstwyon542jdipxps4flufcxur7i&amp;rid=200.webp", width="100%", style='border: 10'&gt;
+]
+
+--
+
+.pull-right[
+
+First we load the packages `nycfligthts13` and `tydyverse`. 
+
+**Remember how?**
+]
+
+--
+
+.bg-lightpurple.b--black.ba.bw2.br3.shadow-5.ph4.mt5[
+
+
+```r
+library(nycflights13)
+library(tidyverse)
+```
+]
+---
+#NYCFLIGHTS13*
+
+The data frame contains all 336,776 flights that departed from New York City in 2013.
+
+
+
+
+```r
+flights
+```
+
+```
+## # A tibble: 336,776 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+....
+```
+
+.footnote[[*] Section 5.2. of  &lt;span style='color:yellow'&gt;`R for Data Science`&lt;/span&gt;]
+
+---
+
+#First things first
+
+There are many variables classes, but for now let's focus on the most usual for the attendants of this course.
+
+You may have noted the number under the column names. These describe the variable type:
+
+.bg-transparent.b--.ba.bw2.br3.shadow-5.ph4.mt5[
+- `int` stands for integers.
+- `dbl` stands for double.
+- `chr` stands for characters vectors or strings.
+
+.tr[
+— R for Data Science
+]
+]
+---
+
+#Manipulating your data
+
+`filter()` allows you to subset observations based on their values.
+
+For example, if we want to check only the flights that departed in December.
+
+
+```r
+filter(flights, month == 12)
+```
+
+```
+## # A tibble: 28,135 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013    12     1       13           2359        14      446
+##  2  2013    12     1       17           2359        18      443
+##  3  2013    12     1      453            500        -7      636
+##  4  2013    12     1      520            515         5      749
+##  5  2013    12     1      536            540        -4      845
+##  6  2013    12     1      540            550       -10     1005
+##  7  2013    12     1      541            545        -4      734
+....
+```
+
+
+
+**&lt;snap style='font-size: 150%'&gt;Now how can we check only the flights that departed in July?&lt;/snap&gt;**
+
+---
+https://d33wubrfki0l68.cloudfront.net/01f4b6d39d2be8269740a3ad7946faa79f7243cf/8369a/diagrams/transform-logical.png
+#Comparisons
+
+To use filtering effectively, you have to know how to select the observations that you want using the comparison operators. R provides the standard suite: `&gt;`, `&gt;=`, `&lt;`, `&lt;=`, `!=` (not equal), and `==` (equal).
+
+###Here's a tip:
+.bg-washed-grey.b--.ba.bw2.br3.shadow-5.ph4.mt5[
+Multiple arguments to `filter()` are combined with “and”: every expression must be true in order for a row to be included in the output. For other types of combinations, you’ll need to use *Boolean operators*:  
+&lt;br&gt;
+- `&amp;` for “and”;  
+- `|` for “or”;  
+- `!` for “not”.
+]
+
+---
+
+#What are Boolean operators?
+
+.pull-left[The figure below describes a complete set of boolean operations. **x** is the left-hand circle, **y** is the right-hand circle, and the shaded region show which parts each operator selects.]
+.pull-right[
+
+```r
+filter(flights, month == 11|month == 12)
+filter(flights, month == (11|12)) #why not?
+filter(flights, !(arr_delay &gt; 120 | dep_delay &gt; 120))
+filter(flights, arr_delay &lt;= 120, dep_delay &lt;= 120)
+```
+
+]
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/01f4b6d39d2be8269740a3ad7946faa79f7243cf/8369a/diagrams/transform-logical.png", width="70%"&gt;
+.pull-right[Figure &lt;span style='color:yellow'&gt;`5.1`&lt;/span&gt; in &lt;span style='color:yellow'&gt;`R for Data Science`&lt;/red&gt;]
+
+
+---
+class:left,top
+#Missing values
+
+When working on experiments or even collecting data. We often have missing information from e.g., when the equipment decides to not work during field work, or the day you get sick and cannot go to the lab to follow your thesis daily experiment. 
+
+This will lead to empty cells in your excel table that you may or may not want to consider when running you analysis. In R, these empty spaces are known as NA s ("not available").
+
+.bg-transparent.b--.ba.bw2.br3.shadow-5.ph4.mt5[
+
+
+&lt;span style='color:red; font-size: 120%'&gt; **Boring alert!!** &lt;/span&gt;  
+
+Almost any operation involving an unknown value will also be unknown
+
+]
+---
+class:left,top
+#Missing values
+.pull-left[
+
+```r
+NA &gt; 5
+```
+
+```
+## [1] NA
+```
+
+```r
+10 == NA
+```
+
+```
+## [1] NA
+```
+]
+
+.pull-right[
+
+
+```r
+NA / 2
+```
+
+```
+## [1] NA
+```
+
+```r
+NA == NA
+```
+
+```
+## [1] NA
+```
+]
+
+Maybe it is easier if we translate this into human language?
+
+
+```r
+# Let x be my age. You don't know how old I am.
+x &lt;- NA
+# Let y be Marcelo's age. We don't know how old he is.
+y &lt;- NA
+# Are John and Mary the same age?
+x == y
+```
+
+```
+## [1] NA
+```
+
+---
+
+#Exercises
+
+Find all flights that
+- Had an arrival delay of two or more hours
+- Flew to Houston (IAH or HOU)
+- Were operated by United, American, or Delta
+- Departed in winter (July, August, and September)
+- Arrived more than two hours late, but didn’t leave late
+- Were delayed by at least an hour, but made up over 30 minutes in flight
+- Departed between midnight and 6am (inclusive)
+- Another useful `dplyr` filtering helper is `between()`. What does it do? Can you use it to simplify the code needed to answer the previous challenges?
+- How many flights have a missing `dep_time`? What other variables are missing? What might these rows represent?
+- Why is `NA ^ 0` not missing? Why is `NA | TRUE` not missing? Why is `FALSE &amp; NA` not missing? Can you figure out the general rule? (`NA * 0` is a tricky counterexample!).
+
+.footnote[Exercises from ***R for Data Science***]
+---
+
+# Arranging lines 
+
+`arrange()` works similarly to `filter()` except that instead of selecting rows, it changes their order.
+
+
+```r
+arrange(flights, year, month, day)
+```
+
+```
+## # A tibble: 336,776 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+## # … with 336,766 more rows, and 12 more variables:
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
+## #   time_hour &lt;dttm&gt;
+```
+
+---
+
+# Arranging lines
+
+
+```r
+arrange(flights, desc(dep_delay))
+```
+
+```
+## # A tibble: 336,776 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     9      641            900      1301     1242
+##  2  2013     6    15     1432           1935      1137     1607
+##  3  2013     1    10     1121           1635      1126     1239
+##  4  2013     9    20     1139           1845      1014     1457
+##  5  2013     7    22      845           1600      1005     1044
+##  6  2013     4    10     1100           1900       960     1342
+##  7  2013     3    17     2321            810       911      135
+##  8  2013     6    27      959           1900       899     1236
+##  9  2013     7    22     2257            759       898      121
+## 10  2013    12     5      756           1700       896     1058
+## # … with 336,766 more rows, and 12 more variables:
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
+## #   time_hour &lt;dttm&gt;
+```
+
+In case of `NA`s, these will always go in the end of the data.
+
+---
+
+# Selecting columns
+
+`select()` is very useful if your data has many columns.
+
+
+```r
+select(flights, year, month, day)
+```
+
+```
+## # A tibble: 336,776 x 3
+##     year month   day
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1  2013     1     1
+##  2  2013     1     1
+##  3  2013     1     1
+##  4  2013     1     1
+##  5  2013     1     1
+##  6  2013     1     1
+##  7  2013     1     1
+##  8  2013     1     1
+##  9  2013     1     1
+## 10  2013     1     1
+## # … with 336,766 more rows
+```
+
+---
+
+#Adding new variables.
+
+There are many ways to create new variables. Here we will focus on using the `mutate()` function from `dplyr`.
+
+
+```r
+#First, we select columns and store them in the `flights_sml` object
+flights_sml &lt;- select(flights, 
+  year:day, ends_with("delay"), 
+  distance, air_time)
+#Then we use the new object and create new variables from the existent ones.
+mutate(flights_sml,
+  gain = dep_delay - arr_delay,
+  speed = distance / air_time * 60
+)
+```
+
+```
+## # A tibble: 336,776 x 9
+##     year month   day dep_delay arr_delay distance air_time  gain speed
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1  2013     1     1         2        11     1400      227    -9  370.
+##  2  2013     1     1         4        20     1416      227   -16  374.
+##  3  2013     1     1         2        33     1089      160   -31  408.
+....
+```
+
+---
+
+#Grouping variables  
+
+`summarise()` collapses a data frame into a single row
+
+
+```r
+summarise(flights, delay = mean(dep_delay, na.rm = TRUE))
+```
+
+```
+## # A tibble: 1 x 1
+##   delay
+##   &lt;dbl&gt;
+## 1  12.6
+```
+
+`summarise()` is also very useful for taking group means and standard deviations
+
+
+```r
+by_day &lt;- group_by(flights, year, month, day)
+summarise(by_day, delay = mean(dep_delay, na.rm = TRUE))
+```
+
+```
+## # A tibble: 365 x 4
+## # Groups:   year, month [12]
+##     year month   day delay
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;
+##  1  2013     1     1 11.5 
+##  2  2013     1     2 13.9 
+##  3  2013     1     3 11.0 
+....
+```
+
+---
+
+#Combine everything
+
+
+```r
+by_dest &lt;- group_by(flights, dest)
+delay &lt;- summarise(by_dest,
+  count = n(), # n() counts the number of lines for each group.
+  dist = mean(distance, na.rm = TRUE),
+  delay = mean(arr_delay, na.rm = TRUE)
+)
+filter(delay, count &gt; 20, dest != "HNL")
+```
+
+```
+## # A tibble: 96 x 4
+##    dest  count  dist delay
+##    &lt;chr&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 ABQ     254 1826   4.38
+##  2 ACK     265  199   4.85
+##  3 ALB     439  143  14.4 
+##  4 ATL   17215  757. 11.3 
+##  5 AUS    2439 1514.  6.02
+##  6 AVL     275  584.  8.00
+##  7 BDL     443  116   7.05
+##  8 BGR     375  378   8.03
+##  9 BHM     297  866. 16.9 
+## 10 BNA    6333  758. 11.8 
+## # … with 86 more rows
+```
+
+---
+
+#Connecting actions
+
+This code is a little frustrating to write because we have to give each intermediate data frame a name, even though we don’t care about it. We can make it better by using pipes `%&gt;%`
+
+.pull-left[
+
+```r
+*delay &lt;- flights %&gt;%
+* group_by(dest) %&gt;%
+  summarise(
+    count = n(),
+    dist = mean(distance, na.rm = TRUE),
+    delay = mean(arr_delay, na.rm = TRUE)
+* ) %&gt;%
+filter(count &gt; 20, dest != "HNL")
+```
+]
+--
+.pull-right[
+&lt;img src="Biostatistics_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+.center[&lt;img src="https://media4.giphy.com/media/kFONSfnHQSEX2NOrh7/giphy.gif", width="70%"&gt;]
+]
+
+
+
+---
+class: inverse, left, top
+
+# Why Data visualization?
+
+Now that we know how to transform our data. Let's check the `Ascomber's quartet dataset` from the package `datasets`.
+
+
+
+
+```r
+anscombe
+```
+
+```
+## # A tibble: 11 x 8
+##       x1    x2    x3    x4    y1    y2    y3    y4
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1    10    10    10     8  8.04  9.14  7.46  6.58
+##  2     8     8     8     8  6.95  8.14  6.77  5.76
+##  3    13    13    13     8  7.58  8.74 12.7   7.71
+##  4     9     9     9     8  8.81  8.77  7.11  8.84
+##  5    11    11    11     8  8.33  9.26  7.81  8.47
+##  6    14    14    14     8  9.96  8.1   8.84  7.04
+##  7     6     6     6     8  7.24  6.13  6.08  5.25
+##  8     4     4     4    19  4.26  3.1   5.39 12.5 
+##  9    12    12    12     8 10.8   9.13  8.15  5.56
+## 10     7     7     7     8  4.82  7.26  6.42  7.91
+## 11     5     5     5     8  5.68  4.74  5.73  6.89
+```
+---
+class: inverse
+# Why Data visualization?
+
+We see that the for any `x`variable there is a `y`. Now let's check the mean and standard deviations of the variables using  `summarise()`.
+
+
+
+
+```r
+anscombe %&gt;% summarise_all(mean) # take the mean of all columns
+```
+
+```
+## # A tibble: 1 x 8
+##      x1    x2    x3    x4    y1    y2    y3    y4
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     9     9     9     9  7.50  7.50   7.5  7.50
+```
+
+```r
+anscombe %&gt;% summarise_all(sd) # take the sd of all columns
+```
+
+```
+## # A tibble: 1 x 8
+##      x1    x2    x3    x4    y1    y2    y3    y4
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1  3.32  3.32  3.32  3.32  2.03  2.03  2.03  2.03
+```
+.pull-left[That is very impressive! All `x` and `y` have similar `mean` and `standard deviation`. This probably means that they are somehow similar right.] 
+.pull-right[]
+
+---
+class: inverse
+## Why Data visualization?
+
+&lt;img src="Biostatistics_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: center, middle
+
+ &lt;span style='color:#004d1a'&gt;"There are no routine statistical questions, only questionable statistical routines."&lt;/span&gt; 
+.right[*Sir David Cox*]
+
+--
+&lt;br&gt;
+&lt;br&gt;
+
+ &lt;span style='color:#004d1a'&gt;“Far better an approximate answer to the right question, which is often vague, than an exact answer to the wrong question, which can always be made precise.” &lt;/span&gt;
+.right[*John Tukey*]
+
+---
+
+#Exploratory data analysis - EDA
+
+
+There is no rule about which questions you should ask to guide your research. However, two types of questions will always be useful for making discoveries within your data. You can loosely word these questions as:
+
+.bg-transparent.b--.ba.bw2.br3.shadow-5.ph4.mt5[
+- What type of variation occurs within the variables?
+
++ What type of covariation occurs between the variables?
+]
+
+---
+
+#What do we have to know before starting
+
+A **variable** is a quantity, quality, or property that you can measure.
+
+A **value** is the state of a variable when you measure it. The value of a variable may change from measurement to measurement.
+
+An **observation** is a set of measurements made under similar conditions (you usually make all of the measurements in an observation at the same time and on the same object). An observation will contain several values, each associated with a different variable. I’ll sometimes refer to an observation as a data point.
+
+**Tabular** data is a set of values, each associated with a variable and an observation. Tabular data is tidy if each value is placed in its own “cell”, each variable in its own column, and each observation in its own row.
+
+---
+
+#Variation
+
+The tendency of the values of a variable to change from measurement to measurement
+
+
+The best way to understand variation is to visualise the distribution of the variable’s values. Here we will look at the `diamonds` data from `ggplot2` 
+
+.pull-left[
+
+![](Biostatistics_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
+
+]
+
+.pull-right[
+![](Biostatistics_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
+]
+
+---
+
+#Variation
+
+##Typical values
+
+*In both bar charts and histograms, tall bars show the common values of a variable, and shorter bars show less-common values.*
+
+&lt;img src="Biostatistics_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+#Clumps
+
+Cluster of similar values may appear in our data. It can be insightful to give it a thought.
+
+&lt;img src="Biostatistics_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+
+Here we see the length (in minutes) of 272 eruptions of the Old Faithful Geyser in Yellowstone National Park. 
+
+---
+
+#Unusual values
+
+*Outliers are observations that are unusual; data points that don’t seem to fit the pattern. Sometimes outliers are data entry errors; other times outliers suggest important new science.*
+
+They are hard to spot in some cases... let's check our precious `diamonds` again. The `y` value represents one of the diamonds dimension.
+
+.pull-left[
+![](Biostatistics_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
+]
+
+--
+
+.pull-right[
+
+![](Biostatistics_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
+]
+
+---
+#Dealing with unusual values
+
+It is advisable to always look for the unnusual values in your data.
+
+.pull-left[
+
+```r
+unusual &lt;- diamonds %&gt;%  
+* filter(y &lt; 3 | y &gt; 20) %&gt;%
+  select(price, x, y, z) %&gt;%
+  arrange(y)
+unusual # let's check the outliers
+```
+
+```
+## # A tibble: 9 x 4
+##   price     x     y     z
+##   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1  5139  0      0    0   
+## 2  6381  0      0    0   
+## 3 12800  0      0    0   
+## 4 15686  0      0    0   
+## 5 18034  0      0    0   
+## 6  2130  0      0    0   
+## 7  2130  0      0    0   
+## 8  2075  5.15  31.8  5.12
+## 9 12210  8.09  58.9  8.06
+```
+]
+--
+
+.pull-right[Probably these are incorrect as we cannot have `size = 0`, also some very big diamonds quite cheap.
+&lt;br&gt;
+&lt;br&gt;
+
+&lt;img src="https://media4.giphy.com/media/OqAeQrGmU7lS6tENnQ/200w.webp?cid=ecf05e47pgch0l3kvuj1asp0z6g65a3g8zrosz11mvxdg0na&amp;rid=200w.webp", width="100%"&gt;
+]
+---
+
+#Dealing with unusual values
+
+If you’ve encountered unusual values in your dataset, and simply want to move on to the rest of your analysis, you have two options.
+
+ - Drop the entire row with the strange values.  
+ **You should be able do it alone at this stage**
+ 
+- Replace the unusual values with missing values (or NA).
+
+
+```r
+diamonds2 &lt;- diamonds %&gt;% 
+  mutate(y = ifelse(y &lt; 3 | y &gt; 20, NA, y))
+```
+
+---
+
+#Missing values
+
+Sometimes missing values can be somehow informative. In the `flights` datas, `dep_time` indicates cancelled flights, for example.
+
+
+```r
+flights %&gt;%
+  mutate(
+*   cancelled = is.na(dep_time),
+    sched_hour = sched_dep_time %/% 100,
+    sched_min = sched_dep_time %% 100,
+    sched_dep_time = sched_hour + sched_min / 60
+  )
+```
+
+
+&lt;img src="Biostatistics_files/figure-html/unnamed-chunk-29-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+#Covariation
+
+*The tendency for the values of two or more variables to vary together in a related way*
+
+
+.pull-left[
+&lt;p align="justify"&gt; It’s common to want to explore the distribution of a continuous variable broken down by a categorical variable.&lt;/p&gt;
+
+![](Biostatistics_files/figure-html/Overlayed lines-1.png)&lt;!-- --&gt;
+]
+--
+.pull-right[
+ Instead of counts, we can display density.
+ 
+ &lt;br&gt;
+ &lt;br&gt;
+![](Biostatistics_files/figure-html/Density lines-1.png)&lt;!-- --&gt;
+
+]
+
+
+---
+
+#Covariation
+
+A **boxplot** comes handy for a distribution of values across categories.
+
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/153b9af53b33918353fda9b691ded68cd7f62f51/5b616/images/eda-boxplot.png"&gt;
+
+---
+
+#Compare values with boxplots
+
+&lt;img src="Biostatistics_files/figure-html/unnamed-chunk-30-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+#Two categorical variables
+
+.pull-left[
+
+![](Biostatistics_files/figure-html/count plot-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+![](Biostatistics_files/figure-html/raster plot-1.png)&lt;!-- --&gt;
+
+]
+
+---
+
+#Two continuous variables
+.pull-left[
+&lt;img src="Biostatistics_files/figure-html/unnamed-chunk-31-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="Biostatistics_files/figure-html/unnamed-chunk-32-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+![](Biostatistics_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
+---
+#Is this the end?
+
+Until now, we saw graphics for numeric and categorical variables for univariate and bivariate analysis.
+
+But this is just the beggining. Let's check a bit more of graphics that you may apply to your data.  
+
+--
+We wil be following the ideas from the **Graphic continuum** by [Jon Schwabish](https://twitter.com/jschwabish) and [Severinno Ribecca](http://www.severinoribecca.one/) that has been published in [Data to Viz](https://www.data-to-viz.com/).
+&lt;br&gt;
+
+.center[&lt;img src="https://media1.giphy.com/media/JEfkiZHu8Y0bS/200w.webp?cid=ecf05e47p6pmzuvxtw461hf4o70aktdguqxy78ucvkrgybm1&amp;rid=200w.webp", width='70%'&gt;]
+
+---
+class: inverse, middle, center
+
+#Enough of R, Let's begin the real game.
+
+---
+
+#These classes are *massively* based on: 
+.pull-left[
+#[Statistics in a nutshell](https://www.oreilly.com/library/view/statistics-in-a/9781449361129/)]
+
+.pull-right[&lt;img src='https://learning.oreilly.com/library/cover/9781449361129/250w/'&gt;]
+---
+
+#Statistics is based on observations
+
+- Before you can use statistics to analyze a problem, you must convert information about the problem into *data*.
+
+- *Measurement* is the process of systematically assigning numbers to objects and their properties to facilitate the use of mathematics in studying and describing objects and their relationships
+
+--
+
++ Observations are tipically numbers but not restricted to it. . For instance, the categories male and female are commonly used in both science and everyday life to classify people, and there is nothing inherently numeric about these two categories.
+
+.center[&lt;img src="https://media.giphy.com/media/9ADoZQgs0tyww/giphy.gif", width="30%"&gt;]
+
+---
+
+#Levels of Measurement
+
+Statisticians commonly distinguish four types or levels of measurement:
+
+- *Nominal Data*:  As the name implies, the numbers function as a name or label and do not have numeric meaning. Ex: 0/1 male or female.
+
+- *Ordinal Data*: Refers to data that has some meaningful order, so that higher values represent more of some characteristic than lower values. Ex: small, big.
+
+- *Interval Data*: Has a meaningful order and has the quality of equal intervals between measurements, representing equal changes in the quantity of whatever is being measured. Ex: Temperature
+
+- *Ratio Data*: has a meaningful order and has the quality of equal intervals between measurements, representing equal changes in the quantity of whatever is being measured. Ex: Physical measurements (height, weight).
+---
+
+#Continuous and Discrete Data
+
+ - *Continuous* data can take any value or any value within a range. Most data measured by *interval* and *ratio* scales, other than that based on counting, is continuous: for instance, weight, height, distance, and income are all continuous.
+ 
+ - *Discrete* variables can take on only particular values, and there are clear boundaries between those values. Ex: Number of siblings.
+ 
+---
+
+#Operationalization
+
+- Your problem **IS NOT** on *mathematics* os *statistics.* You should be really worried on understanding your study objects, your questions and your expectations.
+
+- Revisit your theoretical basis often.
+- Se what others have been doing.
+- *Be creative*! Science is not only repetition.
+-Some argue that measurement of even physical quantities such as length require operationalization because there are different ways to measure even concrete properties such as length.
+
+---
+
+#Proxy
+
+The term *proxy measurement* refers to the process of substituting one measurement for another.This is often considered of part of the operationalization.
+
+Ex: Body size is a good proxy for metabolic rates.
+
+- Finland has been considered the happiest country in the world.
+
+.center[&lt;img src="https://media.giphy.com/media/j79FZdmgSAs2tjvbpF/giphy.gif"&gt;]
+
+
+---
+
+# True and Error Scores
+
+We can safely assume that few, if any, measurements are completely accurate. This is true not only because measurements are made and recorded by human beings but also because the process of measurement often involves assigning discrete numbers to a continuous world.
+ 
+Classical measurement theory conceives of any measurement or observed score as consisting of two parts: **true score (T)** and **error (E)**.
+&lt;br&gt;
+&lt;br&gt;
+
+$$
+X = T + E
+$$
+A home scale might measures someone's weight as 70 kilograms when that person’s true weight is 69 kilograms. This would be expressed, using the preceding formula, as:
+
+$$
+70 = 69 + 1
+$$
+
+---
+
+#Random and Systematic Error
+
+
+Because we live in the real world rather than a Platonic universe, we assume that all measurements contain some error. However, not all error is created equal, and we can learn to live with *random error* while doing whatever we can to avoid *systematic error*.
+
+- *Random error* is error due to chance: it has no particular pattern and is assumed to cancel itself out over repeated measurements.
+
+ - The value of the error component of any measurement is not related to the value of the true score for that measurement. *Ex: weight of multiple individuals*.
+ - The error component of each score is independent and unrelated to the error component for any other score. *Ex: Errors should not incresse or reduce the longer you carry an experiment.*
+
+- *Systematic error* has an observable pattern, is not due to chance, and often has a cause or causes that can be identified and remedied. *Ex: uncalibrated equipments, informing precise time using analogic watches.*
+
+---
+
+# Reliability
+
+ **Reliability** refers to how consistent or repeatable measurements are.
+
+ - *Multiple-occasions reliability*, sometimes called test-retest reliability, refers to how similarly a test or scale performs over repeated administration.
+ 
+ - *Multiple-forms reliability* (also called parallel-forms reliability) refers to howsimilarly different versions of a test or questionnaire perform in measuring the same entity. *Ex: Scholastic Aptitude Test.*
+ 
+ - *Internal consistency reliability* refers to how well the items that make up an instrument (for instance, a test or survey) reflect the same construct.
+ 
+---
+
+#Validity
+
+**Validity** refers to how well a test or rating scale measures what it is supposed to
+measure.
+
+*Content validity* refers to how well the process of measurement reflects the important
+content of the domain of interest and is of particular concern when the purpose of
+the measurement is to draw inferences about a larger domain of interest. *Ex: Examinations.*
+
+*Concurrent validity* refers to how well inferences drawn from a measurement can be
+used to predict some other behavior or performance that is measured at approximately
+the same time.
+
+*Predictive validity* similar to concurrent validity but related to future events.
+
+---
+
+#Measurement Bias
+
+*Bias* can enter studies in two primary ways: during the *selection and retention* of the
+subjects of study or in the way *information* is collected about the subjects. 
+
+- It is a source of *systematic* error.
+- Might result in incorrect inferences and conclusions irrespectively to statistical procedures.
+
+###Selection bias
+
+Exists if some potential subjects are more likely than others to be selected
+for the study sample.
+
+*Volunteer bias* refers to the fact that people who volunteer to be in studies are usually
+not representative of the population as a whole. The contrary is the *Nonresponse bias*.
+
+*Informative censoring* can create bias in any longitudinal study (a study in which
+subjects are followed over a period of time). Losing subjects during a long-term study
+is a common occurrence, but the real problem comes when subjects do not drop out
+at random but for reasons related to the study’s purpose.
+
+---
+
+###Information Bias
+
+When the methods used to collect or record the data affect the validity of the information upon the study is based. 
+
+*Recall bias* refers to the fact that people with a life experience such as suffering from
+a serious disease or injury are more likely to remember events that they believe are
+related to that experience.
+
+*Detection bias* refers to the fact that certain characteristics may be more likely to be
+detected or reported in some people than in others.
+
+*Social desirability bias* is caused by people’s desire to present themselves in a favorable
+light. This often motivates them to give responses that they believe will please
+the person asking the question.
+
+
+---
+class: top, left
+background-image: url(https://israelbehindthenews.com/wp-content/uploads/2019/09/Match-Toss-Prediction.jpg)
+background-size: cover
+#Probability
+&lt;br&gt;&lt;br&gt;
+&lt;br&gt;&lt;br&gt;
+&lt;br&gt;&lt;br&gt;
+&lt;br&gt;&lt;br&gt;
+&lt;br&gt;&lt;br&gt;
+&lt;br&gt;&lt;br&gt;
+&lt;br&gt;&lt;br&gt;
+&lt;br&gt;&lt;br&gt;
+
+
+###Caio Graco-Roza&lt;br&gt;Marcelo Manzi Marinho
+
+---
+class: inverse, top, center
+
+#Are you afraid of formulas? 
+
+--
+
+###...well, you shouldn't!
+
+&lt;img src="https://media.giphy.com/media/5ll5vRkqUETvy/giphy.gif"&gt;
+
+---
+
+#Formulas
+
+Can you understand this ultimate level of math?
+
+$$
+\frac{1}{n}\sum_{i=1}^{n}x_i
+$$
+--
+&lt;br&gt;
+&lt;br&gt;
+.pull-left[
+Now applying it to real numbers:
+
+$$
+\overline{x}= \frac{1}{3}\sum_{i=1}^{3}x_i = \frac{1}{3} (1+3+5) = 3
+$$
+ 
+]
+--
+.pull-right[&lt;img src="https://media3.giphy.com/media/sgswHaZw5yklq/giphy.webp?cid=ecf05e47lw7wpw74qerb865jhhmw9hh1bfm40d9zykddq59v&amp;rid=giphy.webp", width=60%&gt;]
+
+
+---
+class:middle, center
+
+#What about some basics before we dig into more formulas?
+
+&lt;img src='https://media1.giphy.com/media/26DN8uOO9Dv0gLpbG/giphy.gif?cid=ecf05e47e2ronzuosxnz84on9p78j7gllb7yl5knvfemujte&amp;rid=giphy.gif'&gt;
+
+
+---
+
+#Basics
+
+- Probability is concerned with the outcome of **trials**, which are also called experiments
+or observations.
+
+- The **sample space**, signified by S, is the set of all possible elementary outcomes of a
+trial.
+
+- An **event**, usually signified by E or any capital letter other than S, is the specification
+of the outcome of a trial and can consist of a single outcome or a set of outcomes.
+
+A common way to portray the probability of events and combinations of events
+graphically is through Venn diagrams.
+&lt;br&gt;&lt;br&gt;
+--
+.pull-left[&lt;img src='https://dr282zn36sxxg.cloudfront.net/datastreams/f-d%3Aa499b7d235ca3fade0f77b770bf4869fc84f7bb690ff64f2e01162cb%2BIMAGE%2BIMAGE.1'&gt;]
+--
+
+.pull-right[&lt;img src='https://media1.giphy.com/media/xT1R9IbXJT7NsBQG9W/giphy.gif?cid=ecf05e473c8ww1al0r0j5iaw4x20bu2i3mja3xt70ol2banq&amp;rid=giphy.gif'&gt;]
+
+
+---
+
+#Combining probabilities
+
+**Union**: The union of several simple events creates a compound event that occurs if one or more of the events occur. Written as A ∪ B meaning either "A or B or both A and B".
+
+**Intersection**: The intersection of two or more simple events creates a compound event that occurs only if all the simple events occur.  Written as A ∩ B and
+meaning “both A and B.”
+
+**Complement**: The complement of an event means everything in the sample space that is not that event. Written as `\(\sim{A}\)`, `\(A^{\complement}\)`, `\(\overline{A}\)` , or `\(A'\)` meaning "not A" or "A complement".
+
+**Mutual exclusivity**: When events in the sets A and B do not occur together.
+
+**Independency**: If two trials are *independent*, the outcome of one trial does not influence the outcome of another.
+
+---
+
+#Combining probabilities
+
+.center[&lt;img src='https://miro.medium.com/max/4800/1*RhZM4JJnN0yljVmYn7DRsg.png', width=70%&gt;]
+.footnote[source: [Probability Rules Cheat Sheet](source:https://medium.com/data-comet/probability-rules-cheat-sheet-e24b92a9017f)]
+
+---
+
+#Permutations
+
+In probability theory, permutations are all the possible ways elements in a set can be arranged. For a set `\(A = (a,b,c)\)` permutations are `\((a, b, c)\)`, `\((a, c, b)\)`, `\((b, a, c)\)`, `\((b, c, a)\)`, `\((c, a, b)\)`, and `\((c, b, a)\)`.
+
+The permutations of a set with distinct elements can be calculated using *factorials*.  
+
+$$
+3! = 3 \times 2 \times 1 = 6
+$$
+
+--
+
+The number of permutations get large very quickly, such that it is usually expressed in computers through **scientific notation**. e.g.: `\(37! = 1.376375E43\)`
+
+.center[&lt;img src='https://media3.giphy.com/media/RhPvGbWK78A0/200.webp?cid=ecf05e47sdbwezkgyfkox7uyvamna3czn6d6f3kx32sr5kuv&amp;rid=200.webp'&gt;]
+---
+
+#Combinations
+
+One may see combinations as permutations that do not allow reshuffling elements.
+Therefore, for the set `\(A\)` from before there is only one possible combination of the elements `\((a, b, c)\)`.
+
+One use of combinations and permutations in statistics is to calculate the number
+of ways a subset of specified size can be drawn from a set, which allows the calculation of the probability of drawing any particular subset from a set.
+
+One is able to infer the number of permutations of `\(k\)` elements in the set `\(A\)` by using:
+
+$$
+nPk = \frac{n!}{(n-k)!} = 3P2 = \frac{3!}{(3-2)!} = \frac{3 \times 2 \times 1}{1 \times 1} = \frac{6}{1} = 6
+$$
+
+Specifically, `\((a, c)\)`, `\((b, c)\)`, `\((b, a)\)`, `\((c, a)\)`, and `\((c, b)\)`.
+
+.center[&lt;img src='https://media1.giphy.com/media/3o7qE1Thg4KxFpMGSk/200w.webp?cid=ecf05e47gwyq5nh5niyeg7ztomft9vsx1usr91bs3d9g9h1k&amp;rid=200w.webp', width=30%&gt;]
+
+---
+
+#Combinations 
+
+What if we do not want repeated combinations with different ordering.
+
+$$
+nPk = \frac{n!}{k!(n-k)!} = 3P2 = \frac{3!}{(2 \times 1) (3-2)!} = \frac{3 \times 2 \times 1}{2 \times 1 \times 1} = \frac{6}{2} = 3
+$$
+
+--
+
+.center[&lt;img src="https://media2.giphy.com/media/2sddCIZRYfiPlNeLZn/200.webp?cid=ecf05e47pbosiotgx2f6jtvymwujb9go75n5059ouj1bfujd&amp;rid=200.webp" width=60%&gt;]
+
+---
+
+#Defining probability
+
+There are several technical ways to define probability, but a definition useful for
+statistics is that probability tells us **how often something is likely to occur when an experiment is repeated**.
+
+Fun facts: 
+
+- The `\(P\)`robability of an `\(E\)`vent is always between 0 and 1. a.k.a `\(0 \leq P(E) \leq 1\)`
+- The `\(P\)`robability of the `\(S\)`ample space is always 1. a.k.a `\(P(S) = 1\)`
+- The `\(P\)`robability of an `\(E\)`vent and its **complement** is always 1. a.k.a `\(P(E) + P(E') = 0\)` 
+
+###Conditional Probabilities
+
+The probability of some event, given that another event has
+occurred. Expressed as `\(P(A|B)\)`.
+
+Conditional probabilities can also be used to define independence. `\(P(A|B) = P(A)\)`.
+
+---
+
+#Estimating probabilities
+
+- Union of mutually exclusive events: `\(P(A \cup B) = P(A) + P(B)\)`
+- Intersection of independent events: `\(P(A \cap B) = P(A) \times P(B)\)`
+- Union of events that are not mutually exclusive: `\(P(A \cup B) = P(A) + P(B) - P(A \cap B)\)`
+- Intersection of nonindependent events: `\(P(A \cap B) = P(A) \times P(B|A)\)`
+
+### Bayes' theorem
+
+Bayes’ theorem, also known as Bayes’ formula, is one of the most common applications
+of conditional probabilities. Written as:
+
+$$
+P(A|B) = \frac{P(B|A) P(A)}{P(B|A) P(A) + P(B|A') P(A')}
+$$
+
+---
+
+#Bayes' theorem.
+
+Suppose you have a screening test that is 95% effective in detecting disease in those
+who have the disease and 99% effective in not falsely diagnosing disease in those
+who are free of it. Suppose also that the rate of disease in the population is 1%.
+
+ - For an individual who has tested positive, what is the probability that he actually has the disease?
+ - Let `\(D\)` be the set for the disease and `\(T\)` be the set for the testing.
+ 
+ Use Bayes' theorem to get the answer:
+ 
+ $$
+ P(D|T) = \frac{P(D \cap T)}{P(T)} = \frac{(0.01)(0.95)}{(0.01)(0.95) + (0.01)(0.99)} = \frac{0.0095}{0.0095 + 0.00099} = 0.49
+ $$
+
+In this example, you expect that about half the people who test positive will be
+false positives, that is that they won’t have the disease.
+
+There is an entire field of study today known as **Bayesian statistics**, which is
+based on the notion of probability as a statement of **strength of belief** rather than
+as a **frequency of occurrence**.
+
+---
+
+background-image: url(https://luminousmen.com/media/descriptive-and-inferential-statistics.jpeg)
+background-size: cover
+
+---
+
+#Descriptive Statistics
+
+*Populations and Samples:* The same data set may be considered as either a population or a sample, depending on the reason for its collection and analysis.
+
+--
+
+- Analyzing a *population* means your data set is the complete population of interest, so you are performing your calculations on all members of the group of interest to you and can make direct
+statements about the characteristics of that group.
+
+- Analyzing a sample means you are working with a subset drawn from a larger population, and any
+statements made about the larger group from which your sample was drawn are **probabilistic** rather than **absolute**.
+
+- Numbers that describe a population are referred to as parameters and are signified by Greek letters such as `\(\mu\)` (for the population mean) and `\(\sigma\)` (for the population standard deviation); numbers that describe a sample are referred to as statistics and are signified by Latin letters such as `\(\overline{x}\)` (the sample mean) and `\(s\)` (the sample standard deviation).
+
+---
+
+#Measures of central tendency
+
+The mean: The *arithmetic* mean, or simply the mean, is often referred to in ordinary speech as
+the average of a set of values.
+
+The mean is an intuitive measure of central tendency that is easy for most people to understand. However, the mean is not an appropriate summary measure for every data set because it is sensitive to extreme values, also known as **outliers** and can also be misleading for **skewed** (We will get to that later) data.
+
+For example: `\(\mu =  (100 + 115 + 93 + 102 + 297)/5 = 707/5 = 141.4)\)`
+
+Is this mean a true representation of the central tendency?
+
+The mean can also be drawn from a frequency table as `\(\frac{\sum_{i}^{n}(x_if_i)}{\sum_{i=1}^{n}f_i}\)`
+
+
+---
+
+#The Median
+
+The median of a data set is the middle value when the values are ranked in ascending
+or descending order. If there are n values, the median is formally defined as the `\(\frac{(n+1)}{x}th\)` element, but in the case of a set of values with even number of observations then it is expressed as the **average of the two middle values**. This can be formally expressed as the average of the `\((n /2)th\)` and `\(((n /2)+1)th\)` elements.
+
+Examples to never forget:
+
+- Odd number (5) of values: 1, 4, 6, 6, 10; Median = 6 because `\((5+1)/2=3\)`, and
+`\(6\)` is the third value in the ordered list.
+
+- Even number (6) of values: 1, 3, 5, 6, 10, 15; Median = `\((5+6)/2 = 5.5\)` because
+6/2 = 3 and [(6/2) +1] = 4, and 5 and 6 are the third and fourth values in the ordered list.
+
+---
+
+#The Mode
+
+A third common measure of central tendency is the **mode**, which refers to the most
+frequently occurring value. The mode is most often useful in describing ordinal or
+categorical data.
+
+---
+
+#Measures of Dispersion
+
+Dispersion refers to how variable or spread out data values are. For this reason,
+measures of dispersions are sometimes called measures of variability or measures of
+spread.
+
+###The Variance and Standard Deviation
+
+The variance and standard deviation are calculated slightly differently depending on whether a population or a sample is being studied, but basically the variance is the average of the squared deviations from the mean, and the standard deviation is the square root of the variance. The variance of a population is signified by `\(\sigma^2\)` (pronounced “sigma-squared”; `\(\sigma\)` is the Greek letter sigma) and the standard deviation as `\(\sigma\)`, whereas the sample variance and standard deviation are signified by `\(s^2\)` and `\(s\)`, respectively.
+
+$$
+Variance(\sigma^2) = \frac{\sum_{i=1}^{n}(x_i - \overline{x})^2} {n}
+$$
+
+$$
+SD(\sigma^2) = \sqrt{\frac{\sum_{i=1}^{n}(x_i - \overline{x})^2} {n}}
+$$
+
+---
+
+#Inferential statistics
+
+Statistical inference is the science of characterizing or making decisions about a
+population by using information from a sample drawn from that population.
+
+If the cases you are studying represent the entire population of interest, and you
+do not wish to generalize beyond those cases, you should be using descriptive
+statistics.
+If the cases you are studying do not represent the entire population of interest,
+and you do wish to generalize beyond those cases, you should be doing inferential
+statistics.
+
+---
+
+#The Normal Distribution
+
+The normal distribution is arguably the most commonly used distribution in statistics. This is partly because the normal distribution is a reasonable description of how many continuous variables are distributed in reality, from industrial process variation to intelligence test scores.
+
+
+![](Biostatistics_files/figure-html/unnamed-chunk-34-1.png)&lt;!-- --&gt;
+---
+
+###Normal distribution 
+
+All normal distributions, regardless of their mean and standard deviation, share
+certain characteristics. These include:
+
+- Symmetry
+- Unimodality (a single most common value)
+- A continuous range from −∞ to +∞ (from negative infinity to positive infinity)
+- A total area under the curve of 1
+- A common value for the mean, median, and mode
+
+###Z score
+
+
+A Z-score is the distance of a data point from the mean, expressed in units of standard
+deviation.
+
+$$
+Z = \frac{x-\mu}{\sigma}
+$$
+
+For this reason, Z-scores are sometimes referred to as *normalized*
+scores, the process of converting raw scores to Z-scores as normalizing the scores,
+and the standard normal distribution as the *Z distribution*.
+
+---
+
+#The Binomial Distribution
+
+We will use the **binomial distribution** as an example of a discrete distribution, that
+is, a distribution for a variable for which only certain values are possible. 
+
+Events in a **binomial distribution** are generated by a *Bernoulli* process. A single trial
+within a *Bernoulli* process is called a *Bernoulli* trial. The binomial distribution describes
+the number of successes in n trials of a Bernoulli process.
+
+The binomial distribution is calculated as
+$$
+\binom{n}{k}=p^k(1-p)^{n-k}
+$$
+
+---
+#The Binomial Distribution
+
+As `\(n\)` increases, holding `\(p\)` constant, the binomial distribution more closely resembles
+the normal distribution.
+
+.center[
+![](Biostatistics_files/figure-html/unnamed-chunk-35-1.png)&lt;!-- --&gt;
+]
+
+Suppose we are flipping a fair coin five times; what is the probability that we will
+get exactly one head? We will define “heads” as a success and use the binomial
+formula to solve this problem.
+
+Define `\(p\)`, `\(k\)`, `\(n\)`.
+
+---
+
+##Solution (Binomial distribution)
+
+Given that `\(p = 0.5\)`; `\(n = 5\)`; and `\(k = 1\)`, solve:
+
+$$
+\binom{n}{k}=p^k(1-p)^{n-k}
+$$
+
+--
+
+$$
+P(k=1;5;0.5) = \binom{5}{1}0.5^1(1-0.5)^{5-1} = 5 \times (0.5)^1 \times (0.5)^4 = 0.16
+$$
+
+---
+
+#The Central Limit Theorem
+
+The central limit theorem states that the sampling distribution of the sample mean
+approximates the normal distribution, regardless of the distribution of the population
+from which the samples are drawn if the sample size is sufficiently large.
+
+.pull-left[
+![](Biostatistics_files/figure-html/unnamed-chunk-36-1.png)&lt;!-- --&gt;
+]
+
+--
+
+.pull-right[
+![](Biostatistics_files/figure-html/unnamed-chunk-37-1.png)&lt;!-- --&gt;
+]
+
+---
+
+#Confidence Intervals
+
+The interval between two values that represent the upper and lower *confidence* limits or *confidence*
+bounds for a statistic.
+
+- It is calculated using a predetermined significance level, often called α (the Greek letter alpha), which is most often set at 0.05, as discussed previously. Thus, if `\(\alpha = 0.05\)`, the confidence coefficient is 0.95 or 95%.
+
+- Confidence intervals are based on the idea that if a study were repeated an infinite number of times, each time drawing a different sample of the same size from the same population, and a confidence interval based on each sample were constructed, `\(x\)`% of the time the confidence interval would contain the true parameter value that the study seeks to estimate, where `\(x\)` is the size of the confidence interval.
+
+
+---
+
+#p-values
+
+A *p-value* expresses the probability that results **at least as extreme** as those obtained
+in an analysis of sample data are due to chance.
+
+ - It is related to the null hypothesis.
+ - Gets smaller with increasing `\(n\)`
+ - Gets smaller with increasing between-group differences in mean.
+ - Gets larger with increasing the variance of two groups.
+ 
+---
+
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightLines": true,
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
